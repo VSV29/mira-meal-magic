@@ -4,7 +4,7 @@ import OnboardingHeader from "@/components/OnboardingHeader";
 
 const dietOptions = [
   { emoji: "🥗", label: "Vegetarian", sub: "No meat, poultry or seafood" },
-  { emoji: "🌱", label: "Strict Vegetarian", sub: "No eggs or dairy either" },
+  { emoji: "🌱", label: "Vegan", sub: "No eggs or dairy either" },
   { emoji: "🐟", label: "Pescatarian", sub: "Fish and seafood allowed" },
   { emoji: "🍗", label: "Non-Vegetarian", sub: "All foods welcome" },
 ];
