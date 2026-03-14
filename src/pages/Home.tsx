@@ -1,0 +1,317 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BottomTabBar from "@/components/BottomTabBar";
+import { toast } from "sonner";
+
+type Meal = {
+  name: string;
+  time: string;
+  cuisine: string;
+  cuisineCode: string;
+  emoji: string;
+  cooked?: boolean;
+};
+
+type DayMeals = { B: Meal; L: Meal; D: Meal };
+
+const cuisineColors: Record<string, string> = {
+  "IN": "bg-saffron", "IN-N": "bg-saffron", "IN-W": "bg-saffron",
+  "IN-S": "bg-mm-green", "IN-C": "bg-mm-green",
+  "IT": "bg-[#276FBF]", "EU": "bg-[#276FBF]",
+  "CN": "bg-coral", "JP": "bg-coral",
+  "ME": "bg-mira-purple",
+};
+
+const cuisineTextColors: Record<string, string> = {
+  "IN": "text-cream", "IN-N": "text-cream", "IN-W": "text-cream",
+  "IN-S": "text-cream", "IN-C": "text-cream",
+  "IT": "text-cream", "EU": "text-cream",
+  "CN": "text-cream", "JP": "text-cream",
+  "ME": "text-cream",
+};
+
+const initialMealData: Record<string, DayMeals> = {
+  Mon: {
+    B: { name: "Poha + Chai", time: "12m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍛" },
+    L: { name: "Dal Tadka + Roti", time: "25m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+    D: { name: "Palak Paneer", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🥘" },
+  },
+  Tue: {
+    B: { name: "Idli + Sambar", time: "10m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
+    L: { name: "Chole Bhature", time: "35m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+    D: { name: "Pasta Primavera", time: "30m", cuisine: "Italian", cuisineCode: "IT", emoji: "🍕" },
+  },
+  Wed: {
+    B: { name: "Upma", time: "15m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
+    L: { name: "Rajma Chawal", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+    D: { name: "Stir-fry Noodles", time: "20m", cuisine: "Chinese", cuisineCode: "CN", emoji: "🍜" },
+  },
+  Thu: {
+    B: { name: "Paratha + Dahi", time: "15m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🫓" },
+    L: { name: "Fish Curry Rice", time: "25m", cuisine: "Coastal", cuisineCode: "IN-C", emoji: "🐟" },
+    D: { name: "Dal Makhani", time: "35m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+  },
+  Fri: {
+    B: { name: "Moong Dal Chilla", time: "20m", cuisine: "Indian", cuisineCode: "IN", emoji: "🫓" },
+    L: { name: "Pav Bhaji", time: "30m", cuisine: "West Indian", cuisineCode: "IN-W", emoji: "🍛" },
+    D: { name: "Mezze Platter", time: "25m", cuisine: "Middle East", cuisineCode: "ME", emoji: "🥙" },
+  },
+  Sat: {
+    B: { name: "Masala Dosa", time: "20m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
+    L: { name: "Butter Chicken", time: "45m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+    D: { name: "Miso Ramen", time: "35m", cuisine: "Japanese", cuisineCode: "JP", emoji: "🍜" },
+  },
+  Sun: {
+    B: { name: "Aloo Paratha", time: "25m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🫓" },
+    L: { name: "Hyderabadi Biryani", time: "55m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍛" },
+    D: { name: "Khichdi + Papad", time: "20m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍚" },
+  },
+};
+
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const dates = [14, 15, 16, 17, 18, 19, 20];
+const todayIdx = 0;
+
+const swapOptions = [
+  { name: "Paneer Butter Masala", time: "30m", code: "IN-N", emoji: "🍛" },
+  { name: "Mixed Veg Curry", time: "25m", code: "IN", emoji: "🥘" },
+  { name: "Tofu Stir Fry", time: "20m", code: "Asian", emoji: "🍜" },
+];
+
+const Home = () => {
+  const navigate = useNavigate();
+  const [mealData, setMealData] = useState(initialMealData);
+  const [cookedCount, setCookedCount] = useState(3);
+  const [selectedMeal, setSelectedMeal] = useState<{ day: string; slot: "B" | "L" | "D" } | null>(null);
+  const [showSwap, setShowSwap] = useState<{ day: string; slot: "B" | "L" | "D" } | null>(null);
+  const [showNewPlan, setShowNewPlan] = useState(false);
+  const [fabLabel, setFabLabel] = useState(true);
+
+  // Auto-hide FAB label
+  useState(() => {
+    setTimeout(() => setFabLabel(false), 3000);
+  });
+
+  const meal = selectedMeal ? mealData[selectedMeal.day][selectedMeal.slot] : null;
+
+  const handleMarkCooked = () => {
+    if (!selectedMeal) return;
+    const updated = { ...mealData };
+    updated[selectedMeal.day] = { ...updated[selectedMeal.day] };
+    updated[selectedMeal.day][selectedMeal.slot] = { ...updated[selectedMeal.day][selectedMeal.slot], cooked: true };
+    setMealData(updated);
+    setCookedCount(c => c + 1);
+    setSelectedMeal(null);
+    toast.success(`🎉 ${meal?.name} marked as cooked! Pantry updated.`);
+  };
+
+  const handleSwapSelect = (opt: typeof swapOptions[0]) => {
+    if (!showSwap) return;
+    const updated = { ...mealData };
+    updated[showSwap.day] = { ...updated[showSwap.day] };
+    updated[showSwap.day][showSwap.slot] = {
+      name: opt.name, time: opt.time, cuisine: "", cuisineCode: opt.code, emoji: opt.emoji,
+    };
+    setMealData(updated);
+    setShowSwap(null);
+    setSelectedMeal(null);
+    toast.success("Meal swapped ✅");
+  };
+
+  return (
+    <div className="mobile-container bg-cream min-h-screen pb-20">
+      {/* Header */}
+      <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-base font-bold text-navy">Good morning, Priya 👋</p>
+            <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
+          </div>
+          <div className="flex gap-2 text-lg">
+            <span>⚙️</span>
+            <span className="relative">🔔<span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-coral rounded-full" /></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Mira banner */}
+      <button onClick={() => navigate("/mira")} className="mx-4 mt-3 rounded-xl bg-mira-purple p-3.5 text-left">
+        <div className="flex items-start gap-3">
+          <span className="w-8 h-8 rounded-full bg-card flex items-center justify-center text-sm">✨</span>
+          <div className="flex-1">
+            <p className="text-[11px] font-bold text-[#E9D5FF]">Mira™:</p>
+            <p className="text-[13px] text-cream mt-0.5">Your paneer expires in 2 days! Built this week around it — 3 paneer dishes planned 🎉</p>
+            <p className="text-[12px] text-[#E9D5FF] underline mt-1">Tap to chat with Mira™ →</p>
+          </div>
+        </div>
+      </button>
+
+      {/* Week grid */}
+      <div className="mt-3 overflow-x-auto px-4">
+        <div className="flex gap-1.5" style={{ width: `${days.length * 78}px` }}>
+          {days.map((day, di) => (
+            <div key={day} className="w-[72px] flex-shrink-0">
+              {/* Day header */}
+              <div className="text-center mb-1.5">
+                <p className="text-[11px] font-bold text-mm-gray">{day}</p>
+                <p className="text-sm font-bold text-navy">{dates[di]}</p>
+                {di === todayIdx && (
+                  <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
+                )}
+              </div>
+              {/* Meal cards */}
+              {(["B", "L", "D"] as const).map((slot) => {
+                const m = mealData[day][slot];
+                const cc = cuisineColors[m.cuisineCode] || "bg-mm-gray";
+                return (
+                  <button key={slot} onClick={() => setSelectedMeal({ day, slot })}
+                    className={`relative w-full min-h-[90px] bg-card rounded-lg shadow-card mb-1.5 overflow-hidden text-left transition-all active:scale-95 ${
+                      m.cooked ? "opacity-60" : ""
+                    }`}
+                  >
+                    <div className={`h-1 w-full ${cc}`} />
+                    <div className="p-1.5">
+                      <span className="text-lg">{m.emoji}</span>
+                      <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-2">{m.name}</p>
+                      <span className="inline-block text-[7px] text-mm-gray bg-light-gray rounded-full px-1 mt-0.5">⏱{m.time}</span>
+                      <span className={`inline-block text-[8px] font-bold ${cc} ${cuisineTextColors[m.cuisineCode] || "text-cream"} rounded-full px-1 mt-0.5 ml-0.5`}>
+                        {m.cuisineCode}
+                      </span>
+                      {m.cooked && <span className="absolute top-2 right-1 text-sm">✅</span>}
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setShowSwap({ day, slot }); }}
+                      className="absolute top-1.5 right-1 text-[10px] text-mm-gray"
+                    >↔</button>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cuisine legend */}
+      <div className="mt-2 px-4 overflow-x-auto">
+        <div className="flex gap-3 text-[10px] text-mm-gray whitespace-nowrap">
+          {[["IN", "Indian", "bg-saffron"], ["IN-N", "North Indian", "bg-saffron"], ["IN-S", "South Indian", "bg-mm-green"], ["IT", "Italian", "bg-[#276FBF]"], ["CN", "Chinese", "bg-coral"], ["JP", "Japanese", "bg-coral"], ["ME", "Middle East", "bg-mira-purple"]].map(([code, name, bg]) => (
+            <span key={code} className="flex items-center gap-1">
+              <span className={`w-2 h-2 rounded-sm ${bg}`} />{code}={name}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Weekly summary */}
+      <div className="mx-4 mt-3 bg-card rounded-xl shadow-card p-3">
+        <p className="text-sm font-bold text-foreground">📊 This week</p>
+        <div className="flex gap-2 mt-2">
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍳 14 meals</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 ₹1,240 est.</span>
+        </div>
+        <div className="mt-2">
+          <div className="flex justify-between text-[11px] text-mm-gray">
+            <span>₹1,240 / ₹1,500 budget</span>
+          </div>
+          <div className="h-1.5 bg-light-gray rounded-full mt-1 overflow-hidden">
+            <div className="h-full bg-mm-green rounded-full" style={{ width: "83%" }} />
+          </div>
+        </div>
+      </div>
+
+      {/* FAB */}
+      <button
+        onClick={() => setShowNewPlan(true)}
+        className="fixed bottom-24 right-6 h-13 bg-saffron text-cream shadow-elevated rounded-full flex items-center gap-2 px-4 py-3 active:scale-95 transition-transform z-30"
+      >
+        <span className="text-xl">↻</span>
+        {fabLabel && <span className="text-sm font-bold">New Plan</span>}
+      </button>
+
+      {/* Meal detail sheet */}
+      {selectedMeal && meal && (
+        <div className="fixed inset-0 z-40 flex items-end" onClick={() => setSelectedMeal(null)}>
+          <div className="absolute inset-0 bg-foreground/30" />
+          <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl animate-slide-up" style={{ maxHeight: "70vh" }}
+            onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-center pt-3"><div className="w-8 h-1 bg-mm-gray/30 rounded-full" /></div>
+            <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(70vh - 20px)" }}>
+              <h3 className="text-xl font-bold text-navy">{meal.name}</h3>
+              <div className="flex gap-2 mt-2">
+                <span className={`text-[11px] font-bold ${cuisineColors[meal.cuisineCode]} text-cream px-2 py-0.5 rounded-full`}>{meal.cuisineCode}</span>
+                <span className="text-[11px] bg-light-gray text-mm-gray px-2 py-0.5 rounded-full">⏱ {meal.time}</span>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-[13px] font-bold text-foreground mb-2">What you'll need:</p>
+                <div className="space-y-1.5 text-[13px]">
+                  <p><span className="text-mm-green">✅</span> Tomatoes, 2 pcs — <span className="text-mm-gray">In pantry</span></p>
+                  <p><span className="text-mm-green">✅</span> Spinach, 100g — <span className="text-mm-gray">In pantry</span></p>
+                  <p><span className="text-coral">🔴</span> Miso paste, 1 tbsp — <span className="text-coral font-bold">Buy</span></p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mt-4">
+                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🔥 320 cal</span>
+                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🥩 12g protein</span>
+                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🌾 45g carbs</span>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <button onClick={() => { setShowSwap(selectedMeal); }} className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm">↔ Swap this meal</button>
+                <button onClick={handleMarkCooked} className="w-full h-11 rounded-lg bg-mm-green text-cream font-bold text-sm">✅ Mark as Cooked</button>
+                <button className="w-full h-11 rounded-lg border border-coral text-coral font-bold text-sm">🚫 Never suggest this again</button>
+                <button onClick={() => { setSelectedMeal(null); navigate("/mira"); }} className="w-full text-mira-purple text-sm font-medium">💬 Ask Mira™ about this recipe</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Swap sheet */}
+      {showSwap && (
+        <div className="fixed inset-0 z-50 flex items-end" onClick={() => setShowSwap(null)}>
+          <div className="absolute inset-0 bg-foreground/30" />
+          <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl animate-slide-up p-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-center mb-3"><div className="w-8 h-1 bg-mm-gray/30 rounded-full" /></div>
+            <h3 className="text-lg font-bold text-navy mb-3">Swap {showSwap.day} {showSwap.slot === "B" ? "Breakfast" : showSwap.slot === "L" ? "Lunch" : "Dinner"}</h3>
+            <div className="space-y-2">
+              {swapOptions.map((opt) => (
+                <button key={opt.name} onClick={() => handleSwapSelect(opt)}
+                  className="w-full flex items-center gap-3 bg-light-bg rounded-xl p-3 active:scale-[0.98] transition-transform">
+                  <span className="text-2xl">{opt.emoji}</span>
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-bold text-foreground">{opt.name}</p>
+                    <p className="text-[11px] text-mm-gray">⏱{opt.time} · {opt.code}</p>
+                  </div>
+                  <span className="text-saffron text-sm font-bold">Select</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New plan dialog */}
+      {showNewPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-8" onClick={() => setShowNewPlan(false)}>
+          <div className="absolute inset-0 bg-foreground/30" />
+          <div className="relative bg-card rounded-2xl p-6 shadow-elevated w-full max-w-[340px]" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-navy">Generate a completely new week?</h3>
+            <p className="text-[13px] text-mm-gray mt-1">Your current plan will be replaced.</p>
+            <div className="flex gap-3 mt-4">
+              <button onClick={() => setShowNewPlan(false)} className="flex-1 h-11 rounded-lg border border-light-gray text-foreground font-semibold text-sm">Cancel</button>
+              <button onClick={() => { setShowNewPlan(false); toast.success("New plan generated!"); }}
+                className="flex-1 h-11 rounded-lg bg-saffron text-cream font-bold text-sm">Yes, refresh plan →</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <BottomTabBar />
+    </div>
+  );
+};
+
+export default Home;
