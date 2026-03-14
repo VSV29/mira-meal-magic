@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import OnboardingHeader from "@/components/OnboardingHeader";
 
 const CookingTime = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const prevState = (location.state as any) || {};
   const [weekday, setWeekday] = useState("30 min");
   const [weekend, setWeekend] = useState("60 min");
   const [skill, setSkill] = useState("Intermediate");
