@@ -14,6 +14,8 @@ import Pantry from "./pages/Pantry";
 import MiraChat from "./pages/MiraChat";
 import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
+import BrowseCuisines from "./pages/BrowseCuisines";
+import MealPlanner from "./pages/MealPlanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
