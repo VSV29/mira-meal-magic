@@ -1,22 +1,42 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import SignUp from "./pages/onboarding/SignUp";
+import RegionSelector from "./pages/onboarding/RegionSelector";
+import CuisineSelector from "./pages/onboarding/CuisineSelector";
+import DietaryProfile from "./pages/onboarding/DietaryProfile";
+import CookingTime from "./pages/onboarding/CookingTime";
+import PantrySetup from "./pages/onboarding/PantrySetup";
+import LoadingTransition from "./pages/onboarding/LoadingTransition";
+import Home from "./pages/Home";
+import Pantry from "./pages/Pantry";
+import MiraChat from "./pages/MiraChat";
+import Shopping from "./pages/Shopping";
+import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/" element={<Navigate to="/onboarding/signup" replace />} />
+          <Route path="/onboarding/signup" element={<SignUp />} />
+          <Route path="/onboarding/region" element={<RegionSelector />} />
+          <Route path="/onboarding/cuisines" element={<CuisineSelector />} />
+          <Route path="/onboarding/dietary" element={<DietaryProfile />} />
+          <Route path="/onboarding/time" element={<CookingTime />} />
+          <Route path="/onboarding/pantry" element={<PantrySetup />} />
+          <Route path="/onboarding/loading" element={<LoadingTransition />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/pantry" element={<Pantry />} />
+          <Route path="/mira" element={<MiraChat />} />
+          <Route path="/shopping" element={<Shopping />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
