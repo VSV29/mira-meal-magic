@@ -14,6 +14,8 @@ import Pantry from "./pages/Pantry";
 import MiraChat from "./pages/MiraChat";
 import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
+import BrowseCuisines from "./pages/BrowseCuisines";
+import MealPlanner from "./pages/MealPlanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/onboarding/pantry" element={<PantrySetup />} />
           <Route path="/onboarding/loading" element={<LoadingTransition />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/browse-cuisines" element={<BrowseCuisines />} />
+          <Route path="/meal-planner" element={<MealPlanner />} />
           <Route path="/pantry" element={<Pantry />} />
           <Route path="/mira" element={<MiraChat />} />
           <Route path="/shopping" element={<Shopping />} />
