@@ -14,6 +14,7 @@ const allergies = ["Tree Nuts", "Dairy", "Gluten", "Soy", "Shellfish", "Eggs"];
 const healthGoals = ["Eat Healthier", "Lose Weight", "High Protein", "Low Carb", "Diabetic-Friendly", "Gain Muscle"];
 
 const DietaryProfile = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const prevState = (location.state as any) || {};
   const [diet, setDiet] = useState("Vegan");
