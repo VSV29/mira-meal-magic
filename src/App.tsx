@@ -35,6 +35,8 @@ const App = () => (
           <Route path="/onboarding/pantry" element={<PantrySetup />} />
           <Route path="/onboarding/loading" element={<LoadingTransition />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/browse-cuisines" element={<BrowseCuisines />} />
+          <Route path="/meal-planner" element={<MealPlanner />} />
           <Route path="/pantry" element={<Pantry />} />
           <Route path="/mira" element={<MiraChat />} />
           <Route path="/shopping" element={<Shopping />} />
