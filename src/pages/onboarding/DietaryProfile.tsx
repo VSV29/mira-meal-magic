@@ -4,7 +4,7 @@ import OnboardingHeader from "@/components/OnboardingHeader";
 
 const dietOptions = [
   { emoji: "🥗", label: "Vegetarian", sub: "No meat, poultry or seafood" },
-  { emoji: "🌱", label: "Strict Vegetarian", sub: "No eggs or dairy either" },
+  { emoji: "🌱", label: "Vegan", sub: "No eggs or dairy either" },
   { emoji: "🐟", label: "Pescatarian", sub: "Fish and seafood allowed" },
   { emoji: "🍗", label: "Non-Vegetarian", sub: "All foods welcome" },
 ];
@@ -15,7 +15,7 @@ const healthGoals = ["Eat Healthier", "Lose Weight", "High Protein", "Low Carb",
 
 const DietaryProfile = () => {
   const navigate = useNavigate();
-  const [diet, setDiet] = useState("Strict Vegetarian");
+  const [diet, setDiet] = useState("Vegan");
   const [selReligious, setSelReligious] = useState<string[]>(["Jain-friendly"]);
   const [selAllergies, setSelAllergies] = useState<string[]>([]);
   const [selGoals, setSelGoals] = useState<string[]>(["Eat Healthier"]);
