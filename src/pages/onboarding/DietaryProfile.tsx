@@ -15,7 +15,7 @@ const healthGoals = ["Eat Healthier", "Lose Weight", "High Protein", "Low Carb",
 
 const DietaryProfile = () => {
   const navigate = useNavigate();
-  const [diet, setDiet] = useState("Strict Vegetarian");
+  const [diet, setDiet] = useState("Vegan");
   const [selReligious, setSelReligious] = useState<string[]>(["Jain-friendly"]);
   const [selAllergies, setSelAllergies] = useState<string[]>([]);
   const [selGoals, setSelGoals] = useState<string[]>(["Eat Healthier"]);
