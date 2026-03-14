@@ -303,7 +303,7 @@ const CuisineSelector = () => {
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] p-4 bg-cream">
         <button
-          onClick={() => navigate("/onboarding/dietary")}
+          onClick={() => navigate("/onboarding/dietary", { state: { country, region, cuisines: selected } })}
           className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base active:scale-[0.98] transition-transform"
         >
           Continue →

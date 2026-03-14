@@ -109,7 +109,7 @@ const DietaryProfile = () => {
       </div>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] p-4 bg-cream">
-        <button onClick={() => navigate("/onboarding/time")}
+        <button onClick={() => navigate("/onboarding/time", { state: { ...prevState, diet, religious: selReligious, allergies: selAllergies, goals: selGoals } })}
           className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base active:scale-[0.98] transition-transform">
           Continue →
         </button>
