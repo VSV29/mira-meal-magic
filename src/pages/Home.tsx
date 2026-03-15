@@ -191,7 +191,7 @@ const Home = () => {
 
       {/* Meal detail sheet */}
       {selectedMeal && meal && (
-        <div className="fixed inset-0 z-40 flex items-end" onClick={() => setSelectedMeal(null)}>
+        <div className="fixed inset-0 z-[60] flex items-end" onClick={() => setSelectedMeal(null)}>
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl animate-slide-up" style={{ maxHeight: "70vh" }}
             onClick={(e) => e.stopPropagation()}>
