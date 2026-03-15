@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
+import MealSlotPicker from "@/components/MealSlotPicker";
 import { getRecipesByIngredients, type Recipe } from "@/data/recipes";
+import { useMealPlan, type MealSlot } from "@/hooks/use-meal-plan";
+import { toast } from "sonner";
 
 const commonIngredients: Record<string, string[]> = {
   "🌾 Grains": ["Rice", "Pasta", "Noodles", "Bread", "Flour", "Oats", "Quinoa", "Tortillas", "Couscous"],
@@ -25,6 +28,7 @@ type Step = "ingredients" | "time" | "results";
 
 const MealPlanner = () => {
   const navigate = useNavigate();
+  const { addRecipeToSlot } = useMealPlan();
   const [step, setStep] = useState<Step>("ingredients");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(30);
@@ -32,6 +36,7 @@ const MealPlanner = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>("🥦 Vegetables");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [search, setSearch] = useState("");
+  const [showSlotPicker, setShowSlotPicker] = useState(false);
 
   const toggleIngredient = (i: string) => {
     setSelectedIngredients(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
@@ -51,6 +56,20 @@ const MealPlanner = () => {
     return items.filter(i => i.toLowerCase().includes(search.toLowerCase()));
   };
 
+  const handleAddToMealPlan = (day: string, slot: MealSlot) => {
+    if (!selectedRecipe) return;
+    addRecipeToSlot(day, slot, {
+      name: selectedRecipe.name,
+      time: selectedRecipe.time,
+      cuisine: selectedRecipe.cuisine,
+      cuisineCode: selectedRecipe.cuisineCode,
+      emoji: selectedRecipe.emoji,
+    });
+    setShowSlotPicker(false);
+    setSelectedRecipe(null);
+    toast.success(`✅ ${selectedRecipe.name} added to ${day} ${slot === "B" ? "Breakfast" : slot === "L" ? "Lunch" : "Dinner"}!`);
+  };
+
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
       {/* Header */}
@@ -68,7 +87,6 @@ const MealPlanner = () => {
             </p>
           </div>
         </div>
-        {/* Progress */}
         <div className="flex gap-1 mt-2">
           {["ingredients", "time", "results"].map((s, i) => (
             <div key={s} className={`flex-1 h-1 rounded-full ${
@@ -83,7 +101,6 @@ const MealPlanner = () => {
         <div className="px-4 pt-4 space-y-3 pb-24">
           <h2 className="text-lg font-bold text-navy">What ingredients do you have?</h2>
           <p className="text-[12px] text-mm-gray">Select what's available — Mira™ finds the best match</p>
-
           {selectedIngredients.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {selectedIngredients.map(i => (
@@ -94,15 +111,11 @@ const MealPlanner = () => {
               ))}
             </div>
           )}
-
-          {/* Search */}
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-mm-gray text-sm">🔍</span>
             <input type="text" placeholder="Search ingredients..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="w-full h-10 pl-9 pr-4 rounded-xl bg-light-gray text-sm outline-none" />
           </div>
-
-          {/* Categories */}
           {Object.entries(commonIngredients).map(([category, items]) => {
             const filtered = filteredIngredients(items);
             if (filtered.length === 0) return null;
@@ -129,8 +142,7 @@ const MealPlanner = () => {
                           selectedIngredients.includes(item)
                             ? "bg-saffron-light border border-saffron text-foreground"
                             : "bg-light-gray border border-transparent text-foreground"
-                        }`}
-                      >
+                        }`}>
                         {selectedIngredients.includes(item) ? "✓ " : ""}{item}
                       </button>
                     ))}
@@ -139,14 +151,11 @@ const MealPlanner = () => {
               </div>
             );
           })}
-
-          {/* CTA */}
           <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-[390px] p-4 bg-cream">
             <button onClick={() => setStep("time")} disabled={selectedIngredients.length === 0}
               className={`w-full h-[52px] rounded-xl font-bold text-base active:scale-[0.98] transition-all ${
                 selectedIngredients.length > 0 ? "bg-saffron text-cream" : "bg-light-gray text-mm-gray cursor-not-allowed"
-              }`}
-            >
+              }`}>
               Next: Set Time & Diet ({selectedIngredients.length} selected) →
             </button>
           </div>
@@ -156,40 +165,32 @@ const MealPlanner = () => {
       {step === "time" && (
         <div className="px-4 pt-4 space-y-4 pb-24">
           <h2 className="text-lg font-bold text-navy">How much time do you have?</h2>
-
           <div className="grid grid-cols-2 gap-2">
             {timeSlots.map(t => (
               <button key={t.label} onClick={() => setSelectedTime(t.max)}
                 className={`h-16 rounded-xl flex flex-col items-center justify-center gap-1 shadow-card transition-all active:scale-95 ${
                   selectedTime === t.max ? "bg-saffron-light border-2 border-saffron" : "bg-card border-2 border-transparent"
-                }`}
-              >
+                }`}>
                 <span className="text-xl">{t.emoji}</span>
                 <span className="text-[12px] font-bold text-foreground">{t.label}</span>
               </button>
             ))}
           </div>
-
           <h2 className="text-lg font-bold text-navy mt-2">Dietary preference?</h2>
           <div className="flex flex-wrap gap-2">
             {diets.map(d => (
               <button key={d} onClick={() => setSelectedDiet(d)}
                 className={`h-9 px-4 rounded-full text-[13px] font-medium transition-all active:scale-95 ${
                   selectedDiet === d ? "bg-mm-green text-cream" : "bg-card border border-light-gray text-foreground"
-                }`}
-              >
-                {d}
-              </button>
+                }`}>{d}</button>
             ))}
           </div>
-
           <div className="bg-card rounded-xl shadow-card p-3 mt-2">
             <p className="text-[12px] text-mm-gray">📋 Summary:</p>
             <p className="text-sm text-foreground mt-1">
               <strong>{selectedIngredients.length}</strong> ingredients · <strong>≤ {selectedTime}min</strong> · <strong>{selectedDiet}</strong>
             </p>
           </div>
-
           <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-[390px] p-4 bg-cream">
             <button onClick={() => setStep("results")}
               className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base active:scale-[0.98] transition-transform">
@@ -205,7 +206,6 @@ const MealPlanner = () => {
             <h2 className="text-lg font-bold text-navy">Recipe Matches</h2>
             <span className="text-[12px] text-mm-gray">{results.length} found</span>
           </div>
-
           {results.length === 0 && (
             <div className="text-center py-12">
               <span className="text-4xl">😔</span>
@@ -213,7 +213,6 @@ const MealPlanner = () => {
               <button onClick={() => setStep("ingredients")} className="mt-3 text-saffron text-sm font-bold">← Try different ingredients</button>
             </div>
           )}
-
           {results.map(r => (
             <button key={r.id} onClick={() => setSelectedRecipe(r)}
               className="w-full bg-card rounded-xl shadow-card p-4 text-left active:scale-[0.98] transition-transform">
@@ -226,9 +225,7 @@ const MealPlanner = () => {
                       r.matchPercent >= 70 ? "bg-mm-green/10 text-mm-green" :
                       r.matchPercent >= 40 ? "bg-saffron-light text-saffron" :
                       "bg-light-gray text-mm-gray"
-                    }`}>
-                      {r.matchPercent}% match
-                    </span>
+                    }`}>{r.matchPercent}% match</span>
                   </div>
                   <p className="text-[11px] text-mm-gray">{r.cuisine} · {r.country}</p>
                   <p className="text-[11px] text-mm-gray mt-0.5">{r.description}</p>
@@ -245,7 +242,7 @@ const MealPlanner = () => {
       )}
 
       {/* Recipe detail */}
-      {selectedRecipe && (
+      {selectedRecipe && !showSlotPicker && (
         <div className="fixed inset-0 z-40 flex items-end" onClick={() => setSelectedRecipe(null)}>
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl" style={{ maxHeight: "75vh" }}
@@ -259,15 +256,12 @@ const MealPlanner = () => {
                   <p className="text-[12px] text-mm-gray">{selectedRecipe.cuisine} · {selectedRecipe.country}</p>
                 </div>
               </div>
-
               <p className="text-[13px] text-mm-gray mt-2">{selectedRecipe.description}</p>
-
               <div className="flex gap-2 mt-3">
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">⏱ {selectedRecipe.time}</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🔥 {selectedRecipe.calories} cal</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">💪 {selectedRecipe.protein}</span>
               </div>
-
               <div className="mt-4">
                 <p className="text-[13px] font-bold text-foreground mb-2">Ingredients:</p>
                 <div className="space-y-1">
@@ -285,9 +279,11 @@ const MealPlanner = () => {
                   })}
                 </div>
               </div>
-
               <div className="mt-4 space-y-2">
-                <button className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm active:scale-[0.98]">
+                <button
+                  onClick={() => setShowSlotPicker(true)}
+                  className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm active:scale-[0.98]"
+                >
                   📅 Add to Meal Plan
                 </button>
                 <button className="w-full h-11 rounded-lg bg-mm-green text-cream font-bold text-sm active:scale-[0.98]">
@@ -301,6 +297,15 @@ const MealPlanner = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Slot picker */}
+      {showSlotPicker && selectedRecipe && (
+        <MealSlotPicker
+          recipeName={selectedRecipe.name}
+          onSelect={handleAddToMealPlan}
+          onClose={() => setShowSlotPicker(false)}
+        />
       )}
 
       <BottomTabBar />

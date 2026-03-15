@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
+import MealSlotPicker from "@/components/MealSlotPicker";
 import { recipes, getCuisinesByCountry, getCuisinesByRegion, getRecipes, type Recipe } from "@/data/recipes";
+import { useMealPlan, type MealSlot } from "@/hooks/use-meal-plan";
+import { toast } from "sonner";
 
 const cuisineEmojis: Record<string, string> = {
   "North Indian": "🍛", "South Indian": "🥘", "Bengali": "🐟", "Gujarati": "🫓",
@@ -20,20 +23,20 @@ const BrowseCuisines = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { country, region } = (location.state as any) || {};
+  const { addRecipeToSlot } = useMealPlan();
 
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [dietFilter, setDietFilter] = useState<string>("All");
   const [search, setSearch] = useState("");
+  const [showSlotPicker, setShowSlotPicker] = useState(false);
 
-  // Get relevant cuisines
   const cuisines = useMemo(() => {
     const list: string[] = [];
     if (country) list.push(...getCuisinesByCountry(country));
     if (region) {
       getCuisinesByRegion(region).forEach(c => { if (!list.includes(c)) list.push(c); });
     }
-    // Add all remaining
     [...new Set(recipes.map(r => r.cuisine))].forEach(c => { if (!list.includes(c)) list.push(c); });
     return list;
   }, [country, region]);
@@ -52,9 +55,22 @@ const BrowseCuisines = () => {
 
   const diets = ["All", "Vegetarian", "Vegan", "Non-Vegetarian", "Pescatarian"];
 
+  const handleAddToMealPlan = (day: string, slot: MealSlot) => {
+    if (!selectedRecipe) return;
+    addRecipeToSlot(day, slot, {
+      name: selectedRecipe.name,
+      time: selectedRecipe.time,
+      cuisine: selectedRecipe.cuisine,
+      cuisineCode: selectedRecipe.cuisineCode,
+      emoji: selectedRecipe.emoji,
+    });
+    setShowSlotPicker(false);
+    setSelectedRecipe(null);
+    toast.success(`✅ ${selectedRecipe.name} added to ${day} ${slot === "B" ? "Breakfast" : slot === "L" ? "Lunch" : "Dinner"}!`);
+  };
+
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
-      {/* Header */}
       <div className="sticky top-0 z-20 bg-navy px-4 py-3">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="text-cream text-lg">←</button>
@@ -67,14 +83,11 @@ const BrowseCuisines = () => {
 
       {!selectedCuisine ? (
         <div className="px-4 pt-4 space-y-4">
-          {/* Search */}
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-mm-gray">🔍</span>
             <input type="text" placeholder="Search cuisines..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="w-full h-11 pl-10 pr-4 rounded-xl bg-light-gray text-sm outline-none" />
           </div>
-
-          {/* Cuisine grid */}
           <div className="grid grid-cols-3 gap-2">
             {filteredCuisines.map(c => {
               const count = recipes.filter(r => r.cuisine === c).length;
@@ -91,16 +104,12 @@ const BrowseCuisines = () => {
         </div>
       ) : (
         <div className="px-4 pt-4 space-y-3">
-          {/* Back to cuisines */}
           <button onClick={() => setSelectedCuisine(null)} className="text-saffron text-sm font-semibold flex items-center gap-1">
             ← All Cuisines
           </button>
-
           <h2 className="text-lg font-bold text-navy flex items-center gap-2">
             {cuisineEmojis[selectedCuisine] || "🍽️"} {selectedCuisine}
           </h2>
-
-          {/* Diet filter */}
           <div className="flex gap-2 overflow-x-auto pb-1">
             {diets.map(d => (
               <button key={d} onClick={() => setDietFilter(d)}
@@ -112,8 +121,6 @@ const BrowseCuisines = () => {
               </button>
             ))}
           </div>
-
-          {/* Recipe cards */}
           <div className="space-y-3">
             {filteredRecipes.length === 0 && (
               <p className="text-sm text-mm-gray text-center py-8">No recipes found for this filter</p>
@@ -145,7 +152,7 @@ const BrowseCuisines = () => {
       )}
 
       {/* Recipe detail sheet */}
-      {selectedRecipe && (
+      {selectedRecipe && !showSlotPicker && (
         <div className="fixed inset-0 z-40 flex items-end" onClick={() => setSelectedRecipe(null)}>
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl" style={{ maxHeight: "75vh" }}
@@ -159,16 +166,13 @@ const BrowseCuisines = () => {
                   <p className="text-[12px] text-mm-gray">{selectedRecipe.cuisine} · {selectedRecipe.country}</p>
                 </div>
               </div>
-
               <p className="text-[13px] text-mm-gray mt-2">{selectedRecipe.description}</p>
-
               <div className="flex gap-2 mt-3">
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">⏱ {selectedRecipe.time}</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🔥 {selectedRecipe.calories} cal</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">💪 {selectedRecipe.protein}</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🌾 {selectedRecipe.carbs}</span>
               </div>
-
               <div className="mt-4">
                 <p className="text-[13px] font-bold text-foreground mb-2">Ingredients:</p>
                 <div className="grid grid-cols-2 gap-1.5">
@@ -177,15 +181,16 @@ const BrowseCuisines = () => {
                   ))}
                 </div>
               </div>
-
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {selectedRecipe.diet.map(d => (
                   <span key={d} className="text-[10px] bg-mm-green/10 text-mm-green font-medium rounded-full px-2 py-0.5">{d}</span>
                 ))}
               </div>
-
               <div className="mt-4 space-y-2">
-                <button className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm active:scale-[0.98] transition-transform">
+                <button
+                  onClick={() => setShowSlotPicker(true)}
+                  className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm active:scale-[0.98] transition-transform"
+                >
                   📅 Add to Meal Plan
                 </button>
                 <button onClick={() => { setSelectedRecipe(null); navigate("/mira"); }}
@@ -196,6 +201,15 @@ const BrowseCuisines = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Slot picker */}
+      {showSlotPicker && selectedRecipe && (
+        <MealSlotPicker
+          recipeName={selectedRecipe.name}
+          onSelect={handleAddToMealPlan}
+          onClose={() => setShowSlotPicker(false)}
+        />
       )}
 
       <BottomTabBar />
