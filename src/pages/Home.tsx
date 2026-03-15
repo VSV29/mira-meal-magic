@@ -39,8 +39,10 @@ const Home = () => {
   })();
   const userName = userProfile.country || "";
 
-  useState(() => {
+  // Auto-hide fab label
+  const [_init] = useState(() => {
     setTimeout(() => setFabLabel(false), 3000);
+    return null;
   });
 
   const meal = selectedMeal ? mealData[selectedMeal.day]?.[selectedMeal.slot] : null;

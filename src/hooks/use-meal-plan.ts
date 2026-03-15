@@ -84,12 +84,18 @@ export function generateMealPlan(
   return plan;
 }
 
-const fallbackMealData: Record<string, DayMeals> = generateMealPlan(
-  ["American", "Mexican", "BBQ / Grill"],
-  "Non-Vegetarian",
-  30,
-  60
-);
+let fallbackMealData: Record<string, DayMeals>;
+try {
+  fallbackMealData = generateMealPlan(
+    ["American", "Mexican", "BBQ / Grill"],
+    "Non-Vegetarian",
+    30,
+    60
+  );
+} catch (e) {
+  console.error("Failed to generate fallback meal plan:", e);
+  fallbackMealData = {} as Record<string, DayMeals>;
+}
 
 function loadMealData(): Record<string, DayMeals> {
   try {
