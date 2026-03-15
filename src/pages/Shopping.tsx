@@ -30,6 +30,7 @@ const catMeta: Record<string, { emoji: string; color: string }> = {
 };
 
 const Shopping = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState(initialItems);
   const [view, setView] = useState<"category" | "meal">("category");
 

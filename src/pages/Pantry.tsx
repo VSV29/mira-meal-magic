@@ -27,6 +27,7 @@ const statusBadge = (status: string) => {
 };
 
 const Pantry = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
 

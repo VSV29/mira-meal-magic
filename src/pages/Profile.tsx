@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
