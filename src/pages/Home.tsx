@@ -198,7 +198,7 @@ const Home = () => {
         <div className="flex gap-2 mt-2">
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍽️ 21 meals</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 ₹1,200 est.</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 {formatBudget(1200, userCountry)} est.</span>
         </div>
         <div className="mt-2">
           <div className="flex justify-between text-[11px] text-mm-gray">
