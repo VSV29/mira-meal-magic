@@ -91,7 +91,7 @@ const Home = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div>
-              <p className="text-base font-bold text-navy">Good morning, {userName} 👋</p>
+              <p className="text-base font-bold text-navy">{userName && userName !== "there" ? `Good morning, ${userName} 👋` : "Good morning 👋"}</p>
               <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
             </div>
           </div>
@@ -213,9 +213,9 @@ const Home = () => {
       <div className="mx-4 mt-3 bg-card rounded-xl shadow-card p-3">
         <p className="text-sm font-bold text-foreground">📊 This week</p>
         <div className="flex gap-2 mt-2">
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍳 21 meals</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍽️ 21 meals</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 est. budget</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 ₹1,200 est.</span>
         </div>
         <div className="mt-2">
           <div className="flex justify-between text-[11px] text-mm-gray">
