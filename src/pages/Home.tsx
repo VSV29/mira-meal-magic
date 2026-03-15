@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
-import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
+import { useMealPlan, generateMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
 
 import { recipes } from "@/data/recipes";
 
@@ -25,7 +25,7 @@ const slotEmoji: Record<MealSlot, string> = { B: "🌅", L: "☀️", D: "🌙" 
 
 const Home = () => {
   const navigate = useNavigate();
-  const { mealData, addRecipeToSlot, markCooked } = useMealPlan();
+  const { mealData, setMealData, addRecipeToSlot, markCooked } = useMealPlan();
   const [cookedCount, setCookedCount] = useState(3);
   const [selectedMeal, setSelectedMeal] = useState<{ day: string; slot: MealSlot } | null>(null);
   const [showSwap, setShowSwap] = useState<{ day: string; slot: MealSlot } | null>(null);
@@ -296,7 +296,17 @@ const Home = () => {
             <p className="text-[13px] text-mm-gray mt-1">Your current plan will be replaced.</p>
             <div className="flex gap-3 mt-4">
               <button onClick={() => setShowNewPlan(false)} className="flex-1 h-11 rounded-lg border border-light-gray text-foreground font-semibold text-sm">Cancel</button>
-              <button onClick={() => { setShowNewPlan(false); toast.success("New plan generated!"); }}
+              <button onClick={() => {
+                  const profile = JSON.parse(localStorage.getItem("mealmate-user-profile") || "{}");
+                  const cuisines = profile.cuisines || ["American", "Mexican", "BBQ / Grill"];
+                  const diet = profile.diet || "Non-Vegetarian";
+                  const weekday = parseInt(profile.weekday) || 30;
+                  const weekend = parseInt(profile.weekend) || 60;
+                  const newPlan = generateMealPlan(cuisines, diet, weekday, weekend);
+                  setMealData(newPlan);
+                  setShowNewPlan(false);
+                  toast.success("New plan generated! 🎉");
+                }}
                 className="flex-1 h-11 rounded-lg bg-saffron text-cream font-bold text-sm">Yes, refresh plan →</button>
             </div>
           </div>
