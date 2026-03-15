@@ -43,6 +43,19 @@ const MiraChat = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const bar = document.getElementById('mira-input-bar');
+      if (!bar) return;
+      const offset = window.innerHeight - vv.height;
+      bar.style.transform = `translateY(-${offset}px)`;
+    };
+    vv.addEventListener('resize', handler);
+    return () => vv.removeEventListener('resize', handler);
+  }, []);
+
   const sendMessage = (text: string) => {
     const userMsg: Message = { from: "user", text, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
     setMessages(prev => [...prev, userMsg]);
