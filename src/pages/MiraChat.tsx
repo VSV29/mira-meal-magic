@@ -56,7 +56,7 @@ const MiraChat = () => {
         const match = recipes.find(r => r.name.toLowerCase() === recipeState.recipeName!.toLowerCase());
         let response: string;
         if (match) {
-          response = `Here's the full recipe for ${match.emoji} ${match.name}!\n\n📝 Ingredients:\n${match.ingredients.map(i => `• ${i}`).join("\n")}\n\n👩‍🍳 ${match.description}\n\n⏱ Ready in ${match.time} · ${match.difficulty} · ${match.calories} cal\n💪 Protein: ${match.protein} · Carbs: ${match.carbs}\n\nWant me to adjust the spice level or swap any ingredients? 😊`;
+          response = `Here's the full recipe for ${match.emoji} ${match.name}!\n\n📝 Ingredients:\n${match.ingredients.map(i => `• ${i}`).join("\n")}\n\n👩‍🍳 Step-by-step:\n${match.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}\n\n⏱ Ready in ${match.time} · ${match.difficulty} · ${match.calories} cal\n💪 Protein: ${match.protein} · Carbs: ${match.carbs}\n\nWant me to adjust the spice level or swap any ingredients? 😊`;
         } else {
           response = `Here's what I know about ${recipeState.recipeEmoji || "🍽️"} ${recipeState.recipeName}!\n\nI'd recommend checking your pantry for fresh ingredients and cooking it with your favorite spices.\n\nWant me to find a similar recipe from your plan? 😊`;
         }
