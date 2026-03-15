@@ -39,6 +39,7 @@ const Home = () => {
     catch { return {}; }
   })();
   const userName = userProfile.name || "there";
+  const userCountry = userProfile.country || "USA";
 
   // Auto-hide fab label
   const [_init] = useState(() => {
