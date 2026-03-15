@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
+import { formatBudget } from "@/lib/currency";
 import { useMealPlan, generateMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
 
 import { recipes } from "@/data/recipes";
@@ -38,6 +39,7 @@ const Home = () => {
     catch { return {}; }
   })();
   const userName = userProfile.name || "there";
+  const userCountry = userProfile.country || "USA";
 
   // Auto-hide fab label
   const [_init] = useState(() => {
@@ -196,7 +198,7 @@ const Home = () => {
         <div className="flex gap-2 mt-2">
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍽️ 21 meals</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 ₹1,200 est.</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 {formatBudget(1200, userCountry)} est.</span>
         </div>
         <div className="mt-2">
           <div className="flex justify-between text-[11px] text-mm-gray">
