@@ -3,25 +3,26 @@ import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 import { navigateBackOrTo } from "@/lib/navigation";
+import { formatBudget, getCurrency } from "@/lib/currency";
 
 type ShopItem = {
   name: string;
   qty: string;
   status: "buy" | "low" | "pantry";
-  price?: string;
+  price?: number;
   online?: boolean;
   category: string;
   checked: boolean;
 };
 
 const initialItems: ShopItem[] = [
-  { name: "Baby spinach", qty: "200g", status: "buy", price: "₹35", category: "Produce", checked: false },
+  { name: "Baby spinach", qty: "200g", status: "buy", price: 35, category: "Produce", checked: false },
   { name: "Tomatoes", qty: "4 pcs", status: "pantry", category: "Produce", checked: false },
-  { name: "Coriander bunch", qty: "1", status: "buy", price: "₹15", category: "Produce", checked: false },
-  { name: "Curd", qty: "400g", status: "low", price: "₹45", category: "Dairy", checked: false },
-  { name: "Paneer", qty: "200g", status: "buy", price: "₹80", category: "Dairy", checked: false },
-  { name: "Miso paste", qty: "1 tbsp", status: "buy", price: "₹120", online: true, category: "Grains & Speciality", checked: false },
-  { name: "Ramen noodles", qty: "200g", status: "buy", price: "₹95", online: true, category: "Grains & Speciality", checked: false },
+  { name: "Coriander bunch", qty: "1", status: "buy", price: 15, category: "Produce", checked: false },
+  { name: "Curd", qty: "400g", status: "low", price: 45, category: "Dairy", checked: false },
+  { name: "Paneer", qty: "200g", status: "buy", price: 80, category: "Dairy", checked: false },
+  { name: "Miso paste", qty: "1 tbsp", status: "buy", price: 120, online: true, category: "Grains & Speciality", checked: false },
+  { name: "Ramen noodles", qty: "200g", status: "buy", price: 95, online: true, category: "Grains & Speciality", checked: false },
 ];
 
 const catMeta: Record<string, { emoji: string; color: string }> = {
@@ -35,14 +36,20 @@ const Shopping = () => {
   const [items, setItems] = useState(initialItems);
   const [view, setView] = useState<"category" | "meal">("category");
 
+  const userCountry = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("mealmate-user-profile") || "{}").country || "USA";
+    } catch { return "USA"; }
+  })();
+
   const toggleCheck = (idx: number) => {
     setItems(prev => prev.map((item, i) => i === idx ? { ...item, checked: !item.checked } : item));
   };
 
   const categories = [...new Set(items.map(i => i.category))];
   const needToBuy = items.filter(i => i.status === "buy" && !i.checked);
-  const totalPrice = needToBuy.reduce((s, i) => s + parseInt((i.price || "₹0").replace("₹", "")), 0);
-  const onlineTotal = needToBuy.filter(i => i.online).reduce((s, i) => s + parseInt((i.price || "₹0").replace("₹", "")), 0);
+  const totalPrice = needToBuy.reduce((s, i) => s + (i.price || 0), 0);
+  const onlineTotal = needToBuy.filter(i => i.online).reduce((s, i) => s + (i.price || 0), 0);
 
   return (
     <div className="mobile-container bg-cream min-h-screen pb-24">
@@ -96,7 +103,7 @@ const Shopping = () => {
                         <p className={`text-sm font-bold text-foreground ${item.checked ? "line-through" : ""}`}>{item.name}</p>
                         <p className="text-[12px] text-mm-gray">{item.qty}</p>
                       </div>
-                      {item.price && <span className="text-[13px] font-bold text-saffron">{item.price}</span>}
+                      {item.price ? <span className="text-[13px] font-bold text-saffron">{formatBudget(item.price, userCountry)}</span> : null}
                       {item.status === "pantry" && <span className="text-[11px] text-mm-green">✓ In pantry</span>}
                       {item.online && (
                         <span className="text-[10px] bg-mira-purple-light text-mira-purple px-2 py-0.5 rounded-full font-semibold">📦 Online</span>
@@ -134,10 +141,10 @@ const Shopping = () => {
       {/* Total */}
       <div className="mx-4 mt-3 bg-card rounded-xl shadow-card p-3">
         <div className="flex justify-between items-center">
-          <span className="text-[15px] font-bold text-foreground">Total to buy: ₹{totalPrice}</span>
+          <span className="text-[15px] font-bold text-foreground">Total to buy: {formatBudget(totalPrice, userCountry)}</span>
           <span className="text-[13px] text-mm-gray">{needToBuy.length} items</span>
         </div>
-        {onlineTotal > 0 && <p className="text-[12px] text-mira-purple mt-1">₹{onlineTotal} can be ordered online</p>}
+        {onlineTotal > 0 && <p className="text-[12px] text-mira-purple mt-1">{formatBudget(onlineTotal, userCountry)} can be ordered online</p>}
       </div>
 
       {/* Action row */}
