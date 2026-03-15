@@ -114,25 +114,6 @@ const Home = () => {
         </div>
       </button>
 
-      {/* Quick actions */}
-      <div className="mx-4 mt-3 grid grid-cols-2 gap-2">
-        <button onClick={() => navigate("/browse-cuisines")}
-          className="bg-card rounded-xl shadow-card p-3 flex items-center gap-2.5 active:scale-95 transition-transform">
-          <span className="w-10 h-10 rounded-lg bg-saffron-light flex items-center justify-center text-lg">🍽️</span>
-          <div className="text-left">
-            <p className="text-[12px] font-bold text-foreground">Browse Cuisines</p>
-            <p className="text-[10px] text-mm-gray">Explore recipes by cuisine</p>
-          </div>
-        </button>
-        <button onClick={() => navigate("/meal-planner")}
-          className="bg-card rounded-xl shadow-card p-3 flex items-center gap-2.5 active:scale-95 transition-transform">
-          <span className="w-10 h-10 rounded-lg bg-mira-purple-light flex items-center justify-center text-lg">✨</span>
-          <div className="text-left">
-            <p className="text-[12px] font-bold text-foreground">Plan a Meal</p>
-            <p className="text-[10px] text-mm-gray">From your ingredients</p>
-          </div>
-        </button>
-      </div>
 
       {/* Week grid with meal slot labels */}
       <div className="mt-3 px-4">
@@ -227,7 +208,26 @@ const Home = () => {
         </div>
       </div>
 
-      {/* FAB */}
+      {/* Quick actions */}
+      <div className="mx-4 mt-3 grid grid-cols-2 gap-2">
+        <button onClick={() => navigate("/browse-cuisines")}
+          className="bg-card rounded-xl shadow-card p-3 flex items-center gap-2.5 active:scale-95 transition-transform">
+          <span className="w-10 h-10 rounded-lg bg-saffron-light flex items-center justify-center text-lg">🍽️</span>
+          <div className="text-left">
+            <p className="text-[12px] font-bold text-foreground">Browse Cuisines</p>
+            <p className="text-[10px] text-mm-gray">Explore recipes by cuisine</p>
+          </div>
+        </button>
+        <button onClick={() => navigate("/meal-planner")}
+          className="bg-card rounded-xl shadow-card p-3 flex items-center gap-2.5 active:scale-95 transition-transform">
+          <span className="w-10 h-10 rounded-lg bg-mira-purple-light flex items-center justify-center text-lg">✨</span>
+          <div className="text-left">
+            <p className="text-[12px] font-bold text-foreground">Plan a Meal</p>
+            <p className="text-[10px] text-mm-gray">From your ingredients</p>
+          </div>
+        </button>
+      </div>
+
       <button
         onClick={() => setShowNewPlan(true)}
         className="fixed bottom-24 right-6 h-13 bg-saffron text-cream shadow-elevated rounded-full flex items-center gap-2 px-4 py-3 active:scale-95 transition-transform z-30"
