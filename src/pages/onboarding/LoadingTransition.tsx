@@ -44,11 +44,11 @@ const LoadingTransition = () => {
         </button>
       )}
 
-      <div className="w-20 h-20 rounded-full bg-card border-[3px] border-mira-purple flex items-center justify-center animate-pulse-gentle">
+      <div className="w-20 h-20 rounded-full bg-card border-[3px] border-mira-purple flex items-center justify-center animate-pulse-gentle mt-[-60px]">
         <span className="text-4xl">✨</span>
       </div>
 
-      <p className="text-xl font-bold text-cream mt-6">
+      <p className="text-xl font-bold text-cream mt-6 text-center px-6">
         {phase === 0 ? "Mira™ is building your plan..." : "Done! Your personalised week is ready 🎉"}
       </p>
 
@@ -73,16 +73,16 @@ const LoadingTransition = () => {
 
       {phase === 1 && (
         <div className="absolute bottom-0 left-0 right-0 bg-card rounded-t-2xl p-5 animate-slide-up">
-          <p className="text-lg font-bold text-navy">✅ All set{country ? `, ${country} foodie` : ""}!</p>
+          <p className="text-lg font-bold text-navy">✅ You're all set!</p>
           <div className="mt-3 space-y-2 text-[13px] text-foreground">
-            <p>✓ Cuisines: {cuisines.length > 0 ? cuisines.join(" · ") : "Global mix"}</p>
-            <p>✓ Diet: {diet}{state.religious?.length > 0 ? `, ${state.religious.join(", ")}` : ""}</p>
-            <p>✓ Weekdays: {weekday} max · Weekends: {weekend} max</p>
-            <p>✓ Pantry: {pantryCount > 0 ? `${pantryCount} ingredients used` : "No items yet"} — shopping list ready</p>
+            <p>🍽️ Cuisines: {cuisines.length > 0 ? cuisines.join(" · ") : "Global mix"}</p>
+            <p>🥩 Diet: {diet}{state.religious?.length > 0 ? `, ${state.religious.join(", ")}` : ""}</p>
+            <p>⏱ Cook time: {weekday} max · Weekends: {weekend} max</p>
+            <p>🧺 Pantry: {pantryCount > 0 ? `${pantryCount} ingredients used` : "No items yet"} — shopping list ready</p>
           </div>
           <button onClick={goHome}
             className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base mt-4 active:scale-[0.98] transition-transform">
-            Let's go →
+            ✨ See My Meal Plan →
           </button>
         </div>
       )}
