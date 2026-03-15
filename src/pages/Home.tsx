@@ -108,8 +108,8 @@ const Home = () => {
           <span className="w-8 h-8 rounded-full bg-card flex items-center justify-center text-sm">✨</span>
           <div className="flex-1">
             <p className="text-[11px] font-bold text-[#E9D5FF]">Mira™:</p>
-            <p className="text-[13px] text-cream mt-0.5">Your weekly meal plan is ready! Tap to chat with Mira™ for adjustments 🎉</p>
-            <p className="text-[12px] text-[#E9D5FF] underline mt-1">Tap to chat with Mira™ →</p>
+            <p className="text-[13px] text-cream mt-0.5">Your paneer expires in 2 days — I've built this week around it. 3 paneer dishes planned 🎉</p>
+            <p className="text-[12px] text-[#E9D5FF] underline mt-1">Chat with Mira™ to adjust anything →</p>
           </div>
         </div>
       </button>
