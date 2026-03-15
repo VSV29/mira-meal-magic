@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 
@@ -29,6 +30,7 @@ const catMeta: Record<string, { emoji: string; color: string }> = {
 };
 
 const Shopping = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState(initialItems);
   const [view, setView] = useState<"category" | "meal">("category");
 
@@ -44,9 +46,14 @@ const Shopping = () => {
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3 flex items-center justify-between">
-        <div>
-          <p className="text-lg font-bold text-navy">🛒 Shopping List</p>
-          <p className="text-[12px] text-mm-gray">{items.filter(i => i.status === "buy").length} items needed · Updated just now</p>
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+            <span className="text-navy text-sm">←</span>
+          </button>
+          <div>
+            <p className="text-lg font-bold text-navy">🛒 Shopping List</p>
+            <p className="text-[12px] text-mm-gray">{items.filter(i => i.status === "buy").length} items needed · Updated just now</p>
+          </div>
         </div>
         <button className="text-lg">↗</button>
       </div>

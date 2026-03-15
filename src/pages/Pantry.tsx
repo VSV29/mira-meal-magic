@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 
 const pantryItems = [
@@ -26,15 +27,21 @@ const statusBadge = (status: string) => {
 };
 
 const Pantry = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
 
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3 flex items-center justify-between">
-        <div>
-          <p className="text-lg font-bold text-navy">🧺 My Pantry</p>
-          <p className="text-[12px] text-mm-gray">Last updated: Today</p>
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+            <span className="text-navy text-sm">←</span>
+          </button>
+          <div>
+            <p className="text-lg font-bold text-navy">🧺 My Pantry</p>
+            <p className="text-[12px] text-mm-gray">Last updated: Today</p>
+          </div>
         </div>
         <button className="text-sm font-bold text-saffron border border-saffron rounded-lg px-3 py-1.5">+ Add</button>
       </div>
