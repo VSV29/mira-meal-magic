@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
-import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
+import { useMealPlan, generateMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
 
 import { recipes } from "@/data/recipes";
 
