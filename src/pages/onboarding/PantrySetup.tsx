@@ -133,6 +133,9 @@ const PantrySetup = () => {
 
   const [selCats, setSelCats] = useState<string[]>(["Grains", "Vegetables", "Spices"]);
   const [selItems, setSelItems] = useState<Record<string, string[]>>({});
+  const [customItems, setCustomItems] = useState<Record<string, string[]>>({});
+  const [addingTo, setAddingTo] = useState<string | null>(null);
+  const [newItem, setNewItem] = useState("");
   const [budget, setBudget] = useState("200");
 
   const toggleCat = (name: string) => {
@@ -145,6 +148,24 @@ const PantrySetup = () => {
       const updated = current.includes(item) ? current.filter(x => x !== item) : [...current, item];
       return { ...prev, [category]: updated };
     });
+  };
+
+  const addCustomItem = (category: string) => {
+    const trimmed = newItem.trim();
+    if (!trimmed) return;
+    setCustomItems(prev => {
+      const existing = prev[category] || [];
+      if (existing.includes(trimmed)) return prev;
+      return { ...prev, [category]: [...existing, trimmed] };
+    });
+    // Auto-select the new item
+    setSelItems(prev => {
+      const current = prev[category] || [];
+      if (current.includes(trimmed)) return prev;
+      return { ...prev, [category]: [...current, trimmed] };
+    });
+    setNewItem("");
+    setAddingTo(null);
   };
 
   const isItemSelected = (category: string, item: string) => {
