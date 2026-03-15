@@ -2,17 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
-
-type Meal = {
-  name: string;
-  time: string;
-  cuisine: string;
-  cuisineCode: string;
-  emoji: string;
-  cooked?: boolean;
-};
-
-type DayMeals = { B: Meal; L: Meal; D: Meal };
+import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
 
 const cuisineColors: Record<string, string> = {
   "IN": "bg-saffron", "IN-N": "bg-saffron", "IN-W": "bg-saffron",
@@ -30,76 +20,32 @@ const cuisineTextColors: Record<string, string> = {
   "ME": "text-cream",
 };
 
-const initialMealData: Record<string, DayMeals> = {
-  Mon: {
-    B: { name: "Poha + Chai", time: "12m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍛" },
-    L: { name: "Dal Tadka + Roti", time: "25m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-    D: { name: "Palak Paneer", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🥘" },
-  },
-  Tue: {
-    B: { name: "Idli + Sambar", time: "10m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
-    L: { name: "Chole Bhature", time: "35m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-    D: { name: "Pasta Primavera", time: "30m", cuisine: "Italian", cuisineCode: "IT", emoji: "🍕" },
-  },
-  Wed: {
-    B: { name: "Upma", time: "15m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
-    L: { name: "Rajma Chawal", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-    D: { name: "Stir-fry Noodles", time: "20m", cuisine: "Chinese", cuisineCode: "CN", emoji: "🍜" },
-  },
-  Thu: {
-    B: { name: "Paratha + Dahi", time: "15m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🫓" },
-    L: { name: "Fish Curry Rice", time: "25m", cuisine: "Coastal", cuisineCode: "IN-C", emoji: "🐟" },
-    D: { name: "Dal Makhani", time: "35m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-  },
-  Fri: {
-    B: { name: "Moong Dal Chilla", time: "20m", cuisine: "Indian", cuisineCode: "IN", emoji: "🫓" },
-    L: { name: "Pav Bhaji", time: "30m", cuisine: "West Indian", cuisineCode: "IN-W", emoji: "🍛" },
-    D: { name: "Mezze Platter", time: "25m", cuisine: "Middle East", cuisineCode: "ME", emoji: "🥙" },
-  },
-  Sat: {
-    B: { name: "Masala Dosa", time: "20m", cuisine: "South Indian", cuisineCode: "IN-S", emoji: "🍚" },
-    L: { name: "Butter Chicken", time: "45m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-    D: { name: "Miso Ramen", time: "35m", cuisine: "Japanese", cuisineCode: "JP", emoji: "🍜" },
-  },
-  Sun: {
-    B: { name: "Aloo Paratha", time: "25m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🫓" },
-    L: { name: "Hyderabadi Biryani", time: "55m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍛" },
-    D: { name: "Khichdi + Papad", time: "20m", cuisine: "Indian", cuisineCode: "IN", emoji: "🍚" },
-  },
-};
-
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const dates = [14, 15, 16, 17, 18, 19, 20];
 const todayIdx = 0;
 
 const swapOptions = [
-  { name: "Paneer Butter Masala", time: "30m", code: "IN-N", emoji: "🍛" },
-  { name: "Mixed Veg Curry", time: "25m", code: "IN", emoji: "🥘" },
-  { name: "Tofu Stir Fry", time: "20m", code: "Asian", emoji: "🍜" },
+  { name: "Paneer Butter Masala", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
+  { name: "Mixed Veg Curry", time: "25m", cuisine: "Indian", cuisineCode: "IN", emoji: "🥘" },
+  { name: "Tofu Stir Fry", time: "20m", cuisine: "Asian", cuisineCode: "CN", emoji: "🍜" },
 ];
 
 const Home = () => {
   const navigate = useNavigate();
-  const [mealData, setMealData] = useState(initialMealData);
+  const { mealData, addRecipeToSlot, markCooked } = useMealPlan();
   const [cookedCount, setCookedCount] = useState(3);
-  const [selectedMeal, setSelectedMeal] = useState<{ day: string; slot: "B" | "L" | "D" } | null>(null);
-  const [showSwap, setShowSwap] = useState<{ day: string; slot: "B" | "L" | "D" } | null>(null);
+  const [selectedMeal, setSelectedMeal] = useState<{ day: string; slot: MealSlot } | null>(null);
+  const [showSwap, setShowSwap] = useState<{ day: string; slot: MealSlot } | null>(null);
   const [showNewPlan, setShowNewPlan] = useState(false);
   const [fabLabel, setFabLabel] = useState(true);
 
-  // Auto-hide FAB label
   useState(() => {
     setTimeout(() => setFabLabel(false), 3000);
   });
 
-  const meal = selectedMeal ? mealData[selectedMeal.day][selectedMeal.slot] : null;
+  const meal = selectedMeal ? mealData[selectedMeal.day]?.[selectedMeal.slot] : null;
 
   const handleMarkCooked = () => {
     if (!selectedMeal) return;
-    const updated = { ...mealData };
-    updated[selectedMeal.day] = { ...updated[selectedMeal.day] };
-    updated[selectedMeal.day][selectedMeal.slot] = { ...updated[selectedMeal.day][selectedMeal.slot], cooked: true };
-    setMealData(updated);
+    markCooked(selectedMeal.day, selectedMeal.slot);
     setCookedCount(c => c + 1);
     setSelectedMeal(null);
     toast.success(`🎉 ${meal?.name} marked as cooked! Pantry updated.`);
@@ -107,12 +53,7 @@ const Home = () => {
 
   const handleSwapSelect = (opt: typeof swapOptions[0]) => {
     if (!showSwap) return;
-    const updated = { ...mealData };
-    updated[showSwap.day] = { ...updated[showSwap.day] };
-    updated[showSwap.day][showSwap.slot] = {
-      name: opt.name, time: opt.time, cuisine: "", cuisineCode: opt.code, emoji: opt.emoji,
-    };
-    setMealData(updated);
+    addRecipeToSlot(showSwap.day, showSwap.slot, opt);
     setShowSwap(null);
     setSelectedMeal(null);
     toast.success("Meal swapped ✅");
@@ -165,22 +106,22 @@ const Home = () => {
           </div>
         </button>
       </div>
+
       {/* Week grid */}
       <div className="mt-3 overflow-x-auto px-4">
-        <div className="flex gap-1.5" style={{ width: `${days.length * 78}px` }}>
-          {days.map((day, di) => (
+        <div className="flex gap-1.5" style={{ width: `${DAYS.length * 78}px` }}>
+          {DAYS.map((day, di) => (
             <div key={day} className="w-[72px] flex-shrink-0">
-              {/* Day header */}
               <div className="text-center mb-1.5">
                 <p className="text-[11px] font-bold text-mm-gray">{day}</p>
-                <p className="text-sm font-bold text-navy">{dates[di]}</p>
+                <p className="text-sm font-bold text-navy">{DATES[di]}</p>
                 {di === todayIdx && (
                   <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
                 )}
               </div>
-              {/* Meal cards */}
               {(["B", "L", "D"] as const).map((slot) => {
-                const m = mealData[day][slot];
+                const m = mealData[day]?.[slot];
+                if (!m) return null;
                 const cc = cuisineColors[m.cuisineCode] || "bg-mm-gray";
                 return (
                   <button key={slot} onClick={() => setSelectedMeal({ day, slot })}
@@ -261,7 +202,6 @@ const Home = () => {
                 <span className={`text-[11px] font-bold ${cuisineColors[meal.cuisineCode]} text-cream px-2 py-0.5 rounded-full`}>{meal.cuisineCode}</span>
                 <span className="text-[11px] bg-light-gray text-mm-gray px-2 py-0.5 rounded-full">⏱ {meal.time}</span>
               </div>
-
               <div className="mt-4">
                 <p className="text-[13px] font-bold text-foreground mb-2">What you'll need:</p>
                 <div className="space-y-1.5 text-[13px]">
@@ -270,13 +210,11 @@ const Home = () => {
                   <p><span className="text-coral">🔴</span> Miso paste, 1 tbsp — <span className="text-coral font-bold">Buy</span></p>
                 </div>
               </div>
-
               <div className="flex gap-2 mt-4">
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🔥 320 cal</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🥩 12g protein</span>
                 <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🌾 45g carbs</span>
               </div>
-
               <div className="mt-4 space-y-2">
                 <button onClick={() => { setShowSwap(selectedMeal); }} className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm">↔ Swap this meal</button>
                 <button onClick={handleMarkCooked} className="w-full h-11 rounded-lg bg-mm-green text-cream font-bold text-sm">✅ Mark as Cooked</button>
@@ -302,7 +240,7 @@ const Home = () => {
                   <span className="text-2xl">{opt.emoji}</span>
                   <div className="flex-1 text-left">
                     <p className="text-sm font-bold text-foreground">{opt.name}</p>
-                    <p className="text-[11px] text-mm-gray">⏱{opt.time} · {opt.code}</p>
+                    <p className="text-[11px] text-mm-gray">⏱{opt.time} · {opt.cuisineCode}</p>
                   </div>
                   <span className="text-saffron text-sm font-bold">Select</span>
                 </button>
