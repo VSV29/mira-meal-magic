@@ -66,7 +66,7 @@ const Home = () => {
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+            <button onClick={() => navigateBackOrTo(navigate)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
               <span className="text-navy text-sm">←</span>
             </button>
             <div>

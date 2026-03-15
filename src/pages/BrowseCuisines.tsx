@@ -74,7 +74,7 @@ const BrowseCuisines = () => {
     <div className="mobile-container bg-cream min-h-screen pb-20">
       <div className="sticky top-0 z-20 bg-navy px-4 py-3">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-cream text-lg">←</button>
+          <button onClick={() => navigateBackOrTo(navigate)} className="text-cream text-lg">←</button>
           <div className="flex-1">
             <h1 className="text-base font-bold text-cream">Browse Cuisines</h1>
             {country && <p className="text-[11px] text-cream/60">{country} · {region}</p>}

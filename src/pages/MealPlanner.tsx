@@ -79,7 +79,7 @@ const MealPlanner = () => {
           <button onClick={() => {
             if (step === "results") setStep("time");
             else if (step === "time") setStep("ingredients");
-            else navigate(-1);
+            else navigateBackOrTo(navigate);
           }} className="text-cream text-lg">←</button>
           <div className="flex-1">
             <h1 className="text-base font-bold text-cream">Help Me Plan a Meal</h1>

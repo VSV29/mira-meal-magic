@@ -13,7 +13,7 @@ const OnboardingHeader = ({ step, totalSteps = 7 }: OnboardingHeaderProps) => {
   return (
     <div className="sticky top-0 z-30 bg-navy">
       <div className="flex items-center justify-center h-12 px-4 relative">
-        <button onClick={() => navigate(-1)} className="absolute left-4 text-cream text-lg">←</button>
+        <button onClick={() => navigateBackOrTo(navigate)} className="absolute left-4 text-cream text-lg">←</button>
         <span className="text-cream text-[13px] font-medium">
           Step {step} of {totalSteps}
         </span>

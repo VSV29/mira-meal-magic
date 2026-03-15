@@ -13,7 +13,7 @@ const SplashScreen = () => {
       }}
     >
       {/* Back button */}
-      <button onClick={() => navigate(-1)} className="absolute top-12 left-5 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-90 transition-transform">
+      <button onClick={() => navigateBackOrTo(navigate)} className="absolute top-12 left-5 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-90 transition-transform">
         <span className="text-cream text-sm">←</span>
       </button>
 

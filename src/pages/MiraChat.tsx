@@ -62,7 +62,7 @@ const MiraChat = () => {
     <div className="mobile-container bg-card min-h-screen flex flex-col pb-[72px]">
       {/* Header */}
       <div className="bg-mira-purple px-4 py-3 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="text-cream text-lg">←</button>
+        <button onClick={() => navigateBackOrTo(navigate)} className="text-cream text-lg">←</button>
         <div className="flex-1 text-center">
           <p className="text-base font-bold text-cream">✨ Mira™</p>
           <p className="text-[12px] text-[#E9D5FF]">Smart Meal Engine</p>
