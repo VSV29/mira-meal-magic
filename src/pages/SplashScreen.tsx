@@ -18,8 +18,8 @@ const SplashScreen = () => {
       </button>
 
       {/* Decorative glow */}
-      <div className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl" style={{ background: "hsl(var(--saffron))", top: "20%", left: "10%" }} />
-      <div className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl" style={{ background: "hsl(var(--mira-purple))", bottom: "25%", right: "5%" }} />
+      <div className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: "hsl(var(--saffron))", top: "20%", left: "10%" }} />
+      <div className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: "hsl(var(--mira-purple))", bottom: "25%", right: "5%" }} />
 
       {/* Logo */}
       <div className="animate-scale-bounce">
