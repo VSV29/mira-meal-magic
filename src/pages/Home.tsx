@@ -64,9 +64,14 @@ const Home = () => {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3">
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-base font-bold text-navy">Good morning, Priya 👋</p>
-            <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+              <span className="text-navy text-sm">←</span>
+            </button>
+            <div>
+              <p className="text-base font-bold text-navy">Good morning, Priya 👋</p>
+              <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
+            </div>
           </div>
           <div className="flex gap-2 text-lg">
             <span>⚙️</span>
