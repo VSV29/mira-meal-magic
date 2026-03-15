@@ -179,9 +179,7 @@ const PantrySetup = () => {
         <div>
           <h2 className="text-xl font-bold text-navy">What's already in your kitchen?</h2>
           <p className="text-[13px] text-mm-gray mt-1">
-            {country
-              ? `Showing common ${country} / ${resolvedRegion} ingredients${diet ? ` · ${diet} friendly` : ""}`
-              : "Mira™ uses this to minimise what you need to buy"}
+            Tick what you already have — Mira™ uses this to cut your shopping list ✂️
           </p>
         </div>
 
