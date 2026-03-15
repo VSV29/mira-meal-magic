@@ -213,7 +213,7 @@ const Home = () => {
       <div className="mx-4 mt-3 bg-card rounded-xl shadow-card p-3">
         <p className="text-sm font-bold text-foreground">📊 This week</p>
         <div className="flex gap-2 mt-2">
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍳 21 meals</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍽️ 21 meals</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 est. budget</span>
         </div>
