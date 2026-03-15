@@ -198,7 +198,7 @@ const PantrySetup = () => {
                 }`}
               >
                 <span className="text-[24px] leading-none">{c.emoji}</span>
-                <span className="text-[11px] font-bold text-foreground leading-tight">{c.name}</span>
+                <span className="text-[11px] font-bold text-foreground leading-tight text-center">{c.label}</span>
                 <span className="text-[9px] text-mm-gray leading-tight">{items.length} items</span>
               </button>
             );
