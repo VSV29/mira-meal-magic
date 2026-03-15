@@ -72,7 +72,7 @@ const MiraChat = () => {
   };
 
   return (
-    <div className="mobile-container bg-card min-h-screen flex flex-col pb-[72px]">
+    <div className="mobile-container bg-card flex flex-col" style={{ height: '100dvh' }}>
       {/* Header */}
       <div className="bg-mira-purple px-4 py-3 flex items-center gap-3">
         <button onClick={() => navigateBackOrTo(navigate)} className="text-cream text-lg">←</button>
