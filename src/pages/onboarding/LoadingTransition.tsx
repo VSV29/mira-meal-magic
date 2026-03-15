@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const LoadingTransition = () => {
   const navigate = useNavigate();
@@ -17,6 +18,13 @@ const LoadingTransition = () => {
     <div className="mobile-container min-h-screen flex flex-col items-center justify-center relative"
       style={{ background: "linear-gradient(180deg, hsl(263,84%,58%), hsl(270,60%,25%))" }}>
       
+      {/* Back button — only during loading phase */}
+      {phase === 0 && (
+        <button onClick={() => navigateBackOrTo(navigate)} className="absolute top-12 left-5 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-90 transition-transform">
+          <span className="text-cream text-sm">←</span>
+        </button>
+      )}
+
       {/* Pulsing logo */}
       <div className="w-20 h-20 rounded-full bg-card border-[3px] border-mira-purple flex items-center justify-center animate-pulse-gentle">
         <span className="text-4xl">✨</span>
