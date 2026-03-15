@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const LoadingTransition = () => {
   const navigate = useNavigate();
