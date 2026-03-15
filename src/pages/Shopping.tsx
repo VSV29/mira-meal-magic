@@ -103,7 +103,7 @@ const Shopping = () => {
                         <p className={`text-sm font-bold text-foreground ${item.checked ? "line-through" : ""}`}>{item.name}</p>
                         <p className="text-[12px] text-mm-gray">{item.qty}</p>
                       </div>
-                      {item.price ? <span className="text-[13px] font-bold text-saffron">{formatBudget(item.price, userCountry)}</span> : null}
+                      {item.status !== "pantry" && item.price > 0 ? <span className="text-[13px] font-bold text-saffron">{formatBudget(item.price, userCountry)}</span> : null}
                       {item.status === "pantry" && <span className="text-[11px] text-mm-green">✓ In pantry</span>}
                       {item.online && (
                         <span className="text-[10px] bg-mira-purple-light text-mira-purple px-2 py-0.5 rounded-full font-semibold">📦 Online</span>
