@@ -84,19 +84,17 @@ export function generateMealPlan(
   return plan;
 }
 
-const fallbackMealData: Record<string, DayMeals> = generateMealPlan(
-  ["American", "Mexican", "BBQ / Grill"],
-  "Non-Vegetarian",
-  30,
-  60
-);
-
 function loadMealData(): Record<string, DayMeals> {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) return JSON.parse(stored);
   } catch {}
-  return fallbackMealData;
+  // Generate fallback on first access
+  try {
+    return generateMealPlan(["American", "Mexican", "BBQ / Grill"], "Non-Vegetarian", 30, 60);
+  } catch {
+    return {} as Record<string, DayMeals>;
+  }
 }
 
 export function useMealPlan() {
