@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const cuisineColors: Record<string, string> = {
   "IN": "bg-saffron", "IN-N": "bg-saffron", "IN-W": "bg-saffron",

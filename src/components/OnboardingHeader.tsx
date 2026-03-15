@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 interface OnboardingHeaderProps {
   step: number;

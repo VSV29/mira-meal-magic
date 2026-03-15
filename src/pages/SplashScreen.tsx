@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/mealmate-logo.png";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const SplashScreen = () => {
   const navigate = useNavigate();
