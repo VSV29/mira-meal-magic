@@ -131,7 +131,7 @@ const Shopping = () => {
           <span className="text-sm">✨</span>
           <span className="text-[11px] font-bold text-[#E9D5FF]">Mira™ · Smart suggestion</span>
         </div>
-        <p className="text-[13px] text-cream">3 urgent items can be ordered from BigBasket by Friday — ₹275 total</p>
+        <p className="text-[13px] text-cream">3 urgent items can be ordered from BigBasket by Friday — {formatBudget(onlineTotal, userCountry)} total</p>
         <button onClick={() => toast.success("Opening BigBasket... 3 items pre-filled in your cart 🛒")}
           className="w-full h-11 bg-card text-mira-purple font-bold text-sm rounded-lg mt-3">
           📦 Order All Urgent →
