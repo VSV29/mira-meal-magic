@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Profile = () => {
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3 flex items-center gap-2">
-        <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+        <button onClick={() => navigateBackOrTo(navigate)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
           <span className="text-navy text-sm">←</span>
         </button>
         <p className="text-lg font-bold text-navy">👤 Profile</p>

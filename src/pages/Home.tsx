@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const cuisineColors: Record<string, string> = {
   "IN": "bg-saffron", "IN-N": "bg-saffron", "IN-W": "bg-saffron",
@@ -65,7 +66,7 @@ const Home = () => {
       <div className="sticky top-0 z-20 bg-card shadow-card px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+            <button onClick={() => navigateBackOrTo(navigate)} className="w-8 h-8 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
               <span className="text-navy text-sm">←</span>
             </button>
             <div>

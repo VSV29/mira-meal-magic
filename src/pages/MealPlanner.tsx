@@ -5,6 +5,7 @@ import MealSlotPicker from "@/components/MealSlotPicker";
 import { getRecipesByIngredients, type Recipe } from "@/data/recipes";
 import { useMealPlan, type MealSlot } from "@/hooks/use-meal-plan";
 import { toast } from "sonner";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const commonIngredients: Record<string, string[]> = {
   "🌾 Grains": ["Rice", "Pasta", "Noodles", "Bread", "Flour", "Oats", "Quinoa", "Tortillas", "Couscous"],
@@ -78,7 +79,7 @@ const MealPlanner = () => {
           <button onClick={() => {
             if (step === "results") setStep("time");
             else if (step === "time") setStep("ingredients");
-            else navigate(-1);
+            else navigateBackOrTo(navigate);
           }} className="text-cream text-lg">←</button>
           <div className="flex-1">
             <h1 className="text-base font-bold text-cream">Help Me Plan a Meal</h1>
