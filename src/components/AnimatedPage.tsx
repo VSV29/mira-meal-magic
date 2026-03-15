@@ -1,4 +1,4 @@
-// Page transition wrapper
+// Page transition wrapper – v2
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
