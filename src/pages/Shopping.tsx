@@ -9,7 +9,7 @@ type ShopItem = {
   name: string;
   qty: string;
   status: "buy" | "low" | "pantry";
-  price?: number;
+  price: number;
   online?: boolean;
   category: string;
   checked: boolean;
