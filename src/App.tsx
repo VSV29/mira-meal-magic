@@ -26,7 +26,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/onboarding/signup" replace />} />
+          <Route path="/" element={<PhoneHomeScreen />} />
+          <Route path="/splash" element={<SplashScreen />} />
           <Route path="/onboarding/signup" element={<SignUp />} />
           <Route path="/onboarding/region" element={<RegionSelector />} />
           <Route path="/onboarding/cuisines" element={<CuisineSelector />} />
