@@ -130,7 +130,7 @@ const MiraChat = () => {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2">
+      <div id="mira-input-bar" className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2" style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
