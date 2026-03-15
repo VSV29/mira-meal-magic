@@ -80,12 +80,12 @@ const allergyExclusions: Record<string, string[]> = {
 };
 
 const categories = [
-  { emoji: "🌾", name: "Grains" },
-  { emoji: "🥦", name: "Vegetables" },
-  { emoji: "🥩", name: "Proteins" },
-  { emoji: "🥛", name: "Dairy" },
-  { emoji: "🧂", name: "Spices" },
-  { emoji: "🫙", name: "Condiments" },
+  { emoji: "🌾", name: "Grains", label: "Grains & Staples" },
+  { emoji: "🥦", name: "Vegetables", label: "Fresh Vegetables" },
+  { emoji: "🥩", name: "Proteins", label: "Proteins & Pulses" },
+  { emoji: "🥛", name: "Dairy", label: "Dairy & Eggs" },
+  { emoji: "🧂", name: "Spices", label: "Spices & Herbs" },
+  { emoji: "🫙", name: "Condiments", label: "Condiments & Oils" },
 ];
 
 const currencyByRegion: Record<string, string> = {
