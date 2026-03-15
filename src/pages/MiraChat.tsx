@@ -118,7 +118,7 @@ const MiraChat = () => {
       </div>
 
       {/* Quick chips */}
-      <div className="px-4 py-2 overflow-x-auto border-t border-light-gray bg-card">
+      <div className="px-4 py-2 overflow-x-auto no-scrollbar border-t border-light-gray bg-card">
         <div className="flex gap-2">
           {quickChips.map(c => (
             <button key={c} onClick={() => sendMessage(c)}

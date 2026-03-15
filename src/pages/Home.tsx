@@ -136,7 +136,7 @@ const Home = () => {
 
       {/* Week grid with meal slot labels */}
       <div className="mt-3 px-4">
-        <div className="overflow-x-auto" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+        <div className="overflow-x-auto no-scrollbar" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           <div className="inline-block min-w-full">
             {/* Day headers row */}
             <div className="flex gap-1.5 mb-1" style={{ paddingLeft: "40px" }}>
