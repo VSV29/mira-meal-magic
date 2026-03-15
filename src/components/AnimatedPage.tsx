@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 
 interface AnimatedPageProps {
   children: ReactNode;
@@ -24,20 +24,25 @@ const variants = {
   },
 };
 
-const AnimatedPage = ({ children, variant = "slide" }: AnimatedPageProps) => {
-  const v = variants[variant];
+const AnimatedPage = forwardRef<HTMLDivElement, AnimatedPageProps>(
+  ({ children, variant = "slide" }, ref) => {
+    const v = variants[variant];
 
-  return (
-    <motion.div
-      initial={v.initial}
-      animate={v.animate}
-      exit={v.exit}
-      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-      style={{ width: "100%", minHeight: "100dvh" }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+    return (
+      <motion.div
+        ref={ref}
+        initial={v.initial}
+        animate={v.animate}
+        exit={v.exit}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{ width: "100%", minHeight: "100dvh" }}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+);
+
+AnimatedPage.displayName = "AnimatedPage";
 
 export default AnimatedPage;

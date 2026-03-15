@@ -18,8 +18,8 @@ const SplashScreen = () => {
       </button>
 
       {/* Decorative glow */}
-      <div className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl" style={{ background: "hsl(var(--saffron))", top: "20%", left: "10%" }} />
-      <div className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl" style={{ background: "hsl(var(--mira-purple))", bottom: "25%", right: "5%" }} />
+      <div className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: "hsl(var(--saffron))", top: "20%", left: "10%" }} />
+      <div className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: "hsl(var(--mira-purple))", bottom: "25%", right: "5%" }} />
 
       {/* Logo */}
       <div className="animate-scale-bounce">
@@ -37,7 +37,7 @@ const SplashScreen = () => {
       {/* Get Started button */}
       <button
         onClick={() => navigate("/onboarding/signup")}
-        className="mt-12 w-64 h-14 rounded-2xl font-bold text-lg tracking-wide shadow-elevated active:scale-[0.97] transition-transform duration-150 animate-slide-up"
+        className="relative z-10 mt-12 w-64 h-14 rounded-2xl font-bold text-lg tracking-wide shadow-elevated active:scale-[0.97] transition-transform duration-150 animate-slide-up"
         style={{
           background: "hsl(var(--saffron))",
           color: "hsl(var(--navy))",
