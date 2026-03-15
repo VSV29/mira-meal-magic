@@ -67,7 +67,7 @@ const CookingTime = () => {
         <div>
           <div className="flex items-baseline justify-between mb-2">
             <p className="text-[11px] text-mm-gray uppercase font-semibold">Skill Level</p>
-            <p className="text-[12px] text-mm-gray italic">{skills.find(s => s.label === skill)?.sub}</p>
+            <p className="text-[12px] text-mm-green italic">{skills.find(s => s.label === skill)?.sub}</p>
           </div>
           <div className="grid grid-cols-3 gap-2">
             {skills.map(s => (
