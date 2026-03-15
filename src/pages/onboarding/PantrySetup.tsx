@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import OnboardingHeader from "@/components/OnboardingHeader";
+import { getCurrency } from "@/lib/currency";
 
 // Region/country-specific pantry items per category
 const pantryData: Record<string, Record<string, string[]>> = {
