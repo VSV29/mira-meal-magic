@@ -37,7 +37,7 @@ const Home = () => {
     try { return JSON.parse(localStorage.getItem("mealmate-user-profile") || "{}"); }
     catch { return {}; }
   })();
-  const userName = userProfile.country || "";
+  const userName = userProfile.name || "there";
 
   // Auto-hide fab label
   const [_init] = useState(() => {
