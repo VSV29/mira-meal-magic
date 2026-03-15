@@ -62,7 +62,7 @@ const Pantry = () => {
       </div>
 
       {/* Filters */}
-      <div className="px-4 mt-3 overflow-x-auto">
+      <div className="px-4 mt-3 overflow-x-auto no-scrollbar">
         <div className="flex gap-2">
           {filters.map(f => (
             <button key={f} onClick={() => setActiveFilter(f)}

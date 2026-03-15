@@ -265,7 +265,7 @@ const CuisineSelector = () => {
         {/* Diet style */}
         <div>
           <p className="text-[11px] text-mm-gray uppercase font-semibold mb-2">Diet Style Overlay</p>
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             {dietStyles.map(d => (
               <button
                 key={d}
