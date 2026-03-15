@@ -80,12 +80,12 @@ const allergyExclusions: Record<string, string[]> = {
 };
 
 const categories = [
-  { emoji: "🌾", name: "Grains" },
-  { emoji: "🥦", name: "Vegetables" },
-  { emoji: "🥩", name: "Proteins" },
-  { emoji: "🥛", name: "Dairy" },
-  { emoji: "🧂", name: "Spices" },
-  { emoji: "🫙", name: "Condiments" },
+  { emoji: "🌾", name: "Grains", label: "Grains & Staples" },
+  { emoji: "🥦", name: "Vegetables", label: "Fresh Vegetables" },
+  { emoji: "🥩", name: "Proteins", label: "Proteins & Pulses" },
+  { emoji: "🥛", name: "Dairy", label: "Dairy & Eggs" },
+  { emoji: "🧂", name: "Spices", label: "Spices & Herbs" },
+  { emoji: "🫙", name: "Condiments", label: "Condiments & Oils" },
 ];
 
 const currencyByRegion: Record<string, string> = {
@@ -198,7 +198,7 @@ const PantrySetup = () => {
                 }`}
               >
                 <span className="text-[24px] leading-none">{c.emoji}</span>
-                <span className="text-[11px] font-bold text-foreground leading-tight">{c.name}</span>
+                <span className="text-[11px] font-bold text-foreground leading-tight text-center">{c.label}</span>
                 <span className="text-[9px] text-mm-gray leading-tight">{items.length} items</span>
               </button>
             );
@@ -214,7 +214,7 @@ const PantrySetup = () => {
           return (
             <div key={cat} className="bg-card rounded-xl p-3 border-t-2 border-saffron shadow-card">
               <p className="text-[12px] text-mm-gray mb-2">
-                {cat} common in {country || resolvedRegion}:
+                {categories.find(c => c.name === cat)?.emoji} {categories.find(c => c.name === cat)?.label || cat} common in {country || resolvedRegion}:
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {allItems.map(item => (
