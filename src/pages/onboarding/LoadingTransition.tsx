@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { navigateBackOrTo } from "@/lib/navigation";
 import { generateMealPlan } from "@/hooks/use-meal-plan";
+import { formatBudget } from "@/lib/currency";
 
 const LoadingTransition = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const LoadingTransition = () => {
   const goHome = () => navigate("/home");
 
   const pantryCount = Object.values(state.pantryItems || {}).flat().length;
+  const budgetAmount = state.budget || 200;
 
   return (
     <div className="mobile-container min-h-screen flex flex-col items-center justify-center relative"
@@ -79,6 +81,7 @@ const LoadingTransition = () => {
             <p>🥩 Diet: {diet}{state.religious?.length > 0 ? `, ${state.religious.join(", ")}` : ""}</p>
             <p>⏱ Cook time: {weekday} max · Weekends: {weekend} max</p>
             <p>🧺 Pantry: {pantryCount > 0 ? `${pantryCount} ingredients used` : "No items yet"} — shopping list ready</p>
+            <p>💰 Budget: {formatBudget(budgetAmount, country || "USA")} per meal</p>
           </div>
           <button onClick={goHome}
             className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base mt-4 active:scale-[0.98] transition-transform">
