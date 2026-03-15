@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import OnboardingHeader from "@/components/OnboardingHeader";
+import { getCurrency } from "@/lib/currency";
 
 // Region/country-specific pantry items per category
 const pantryData: Record<string, Record<string, string[]>> = {
@@ -104,7 +105,7 @@ const PantrySetup = () => {
   const { region, country, diet, religious, allergies } = state;
 
   const resolvedRegion = region || "South Asia";
-  const currency = currencyByRegion[resolvedRegion] || "₹";
+  const currency = getCurrency(country || "USA");
 
   // Build exclusion set from dietary choices
   const exclusionSet = useMemo(() => {
@@ -258,8 +259,8 @@ const PantrySetup = () => {
         {/* Budget */}
         <div className="bg-card rounded-xl p-4 shadow-card flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold text-foreground">{currency} Budget per meal</p>
-            <p className="text-[12px] text-mm-gray">Used to prioritise affordable suggestions</p>
+            <p className="text-sm font-bold text-foreground">{currency.symbol} Budget per meal</p>
+            <p className="text-[12px] text-mm-gray">Budget per meal in {currency.code}</p>
           </div>
           <input
             type="number"
