@@ -81,6 +81,7 @@ const LoadingTransition = () => {
             <p>🥩 Diet: {diet}{state.religious?.length > 0 ? `, ${state.religious.join(", ")}` : ""}</p>
             <p>⏱ Cook time: {weekday} max · Weekends: {weekend} max</p>
             <p>🧺 Pantry: {pantryCount > 0 ? `${pantryCount} ingredients used` : "No items yet"} — shopping list ready</p>
+            <p>💰 Budget: {formatBudget(budgetAmount, country || "USA")} per meal</p>
           </div>
           <button onClick={goHome}
             className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base mt-4 active:scale-[0.98] transition-transform">
