@@ -37,7 +37,7 @@ const SplashScreen = () => {
       {/* Get Started button */}
       <button
         onClick={() => navigate("/onboarding/signup")}
-        className="mt-12 w-64 h-14 rounded-2xl font-bold text-lg tracking-wide shadow-elevated active:scale-[0.97] transition-transform duration-150 animate-slide-up"
+        className="relative z-10 mt-12 w-64 h-14 rounded-2xl font-bold text-lg tracking-wide shadow-elevated active:scale-[0.97] transition-transform duration-150 animate-slide-up"
         style={{
           background: "hsl(var(--saffron))",
           color: "hsl(var(--navy))",
