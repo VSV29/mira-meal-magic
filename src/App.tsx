@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import PhoneHomeScreen from "./pages/PhoneHomeScreen";
+import SplashScreen from "./pages/SplashScreen";
 import SignUp from "./pages/onboarding/SignUp";
 import RegionSelector from "./pages/onboarding/RegionSelector";
 import CuisineSelector from "./pages/onboarding/CuisineSelector";
