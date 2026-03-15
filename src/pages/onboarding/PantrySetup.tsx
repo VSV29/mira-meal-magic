@@ -133,6 +133,9 @@ const PantrySetup = () => {
 
   const [selCats, setSelCats] = useState<string[]>(["Grains", "Vegetables", "Spices"]);
   const [selItems, setSelItems] = useState<Record<string, string[]>>({});
+  const [customItems, setCustomItems] = useState<Record<string, string[]>>({});
+  const [addingTo, setAddingTo] = useState<string | null>(null);
+  const [newItem, setNewItem] = useState("");
   const [budget, setBudget] = useState("200");
 
   const toggleCat = (name: string) => {
@@ -145,6 +148,24 @@ const PantrySetup = () => {
       const updated = current.includes(item) ? current.filter(x => x !== item) : [...current, item];
       return { ...prev, [category]: updated };
     });
+  };
+
+  const addCustomItem = (category: string) => {
+    const trimmed = newItem.trim();
+    if (!trimmed) return;
+    setCustomItems(prev => {
+      const existing = prev[category] || [];
+      if (existing.includes(trimmed)) return prev;
+      return { ...prev, [category]: [...existing, trimmed] };
+    });
+    // Auto-select the new item
+    setSelItems(prev => {
+      const current = prev[category] || [];
+      if (current.includes(trimmed)) return prev;
+      return { ...prev, [category]: [...current, trimmed] };
+    });
+    setNewItem("");
+    setAddingTo(null);
   };
 
   const isItemSelected = (category: string, item: string) => {
@@ -187,14 +208,16 @@ const PantrySetup = () => {
         {/* Expanded panels for each selected category */}
         {selCats.map(cat => {
           const items = getItems(cat);
-          if (items.length === 0) return null;
+          const custom = customItems[cat] || [];
+          const allItems = [...items, ...custom.filter(c => !items.includes(c))];
+          if (allItems.length === 0 && addingTo !== cat) return null;
           return (
             <div key={cat} className="bg-card rounded-xl p-3 border-t-2 border-saffron shadow-card">
               <p className="text-[12px] text-mm-gray mb-2">
                 {cat} common in {country || resolvedRegion}:
               </p>
               <div className="grid grid-cols-2 gap-2">
-                {items.map(item => (
+                {allItems.map(item => (
                   <button key={item} onClick={() => toggleItem(cat, item)}
                     className={`h-9 px-2 rounded-lg text-[12px] text-left flex items-center gap-2 transition-all ${
                       isItemSelected(cat, item) ? "text-mm-green font-bold" : "text-mm-gray"
@@ -204,6 +227,27 @@ const PantrySetup = () => {
                   </button>
                 ))}
               </div>
+              {addingTo === cat ? (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    autoFocus
+                    type="text"
+                    value={newItem}
+                    onChange={e => setNewItem(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && addCustomItem(cat)}
+                    placeholder="Item name"
+                    className="flex-1 h-9 px-3 rounded-lg border border-light-gray bg-cream text-[12px] text-foreground outline-none focus:border-saffron"
+                  />
+                  <button onClick={() => addCustomItem(cat)} className="h-9 px-3 rounded-lg bg-saffron text-cream text-[12px] font-bold">Add</button>
+                  <button onClick={() => { setAddingTo(null); setNewItem(""); }} className="h-9 px-2 text-mm-gray text-[12px]">✕</button>
+                </div>
+              ) : (
+                <button onClick={() => setAddingTo(cat)}
+                  className="mt-2 h-9 px-3 rounded-lg border border-dashed border-saffron text-saffron text-[12px] font-semibold flex items-center gap-1"
+                >
+                  ＋ Add item
+                </button>
+              )}
             </div>
           );
         })}
