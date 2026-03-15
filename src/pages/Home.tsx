@@ -25,7 +25,7 @@ const slotEmoji: Record<MealSlot, string> = { B: "🌅", L: "☀️", D: "🌙" 
 
 const Home = () => {
   const navigate = useNavigate();
-  const { mealData, addRecipeToSlot, markCooked } = useMealPlan();
+  const { mealData, setMealData, addRecipeToSlot, markCooked } = useMealPlan();
   const [cookedCount, setCookedCount] = useState(3);
   const [selectedMeal, setSelectedMeal] = useState<{ day: string; slot: MealSlot } | null>(null);
   const [showSwap, setShowSwap] = useState<{ day: string; slot: MealSlot } | null>(null);
