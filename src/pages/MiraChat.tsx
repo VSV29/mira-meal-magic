@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 import { navigateBackOrTo } from "@/lib/navigation";
+import { recipes } from "@/data/recipes";
 
 type Message = { from: "mira" | "user"; text: string; time: string };
 
@@ -52,7 +53,13 @@ const MiraChat = () => {
       setTyping(true);
       setTimeout(() => {
         setTyping(false);
-        const response = `Here's the full recipe for ${recipeState.recipeEmoji || "🍽️"} **${recipeState.recipeName}**!\n\n📝 **Ingredients:**\n• 200g paneer, cubed\n• 1 cup spinach/veggies\n• 2 tbsp oil or ghee\n• 1 onion, diced\n• 2 tomatoes, pureed\n• Spices to taste\n\n👩‍🍳 **Steps:**\n1. Heat oil, sauté onions until golden\n2. Add tomato puree, cook 3-4 min\n3. Add spices & main ingredients\n4. Cook on medium heat 8-10 min\n5. Garnish & serve hot!\n\n⏱ Ready in ~25 min\n\nWant me to adjust the spice level or swap any ingredients? 😊`;
+        const match = recipes.find(r => r.name.toLowerCase() === recipeState.recipeName!.toLowerCase());
+        let response: string;
+        if (match) {
+          response = `Here's the full recipe for ${match.emoji} ${match.name}!\n\n📝 Ingredients:\n${match.ingredients.map(i => `• ${i}`).join("\n")}\n\n👩‍🍳 ${match.description}\n\n⏱ Ready in ${match.time} · ${match.difficulty} · ${match.calories} cal\n💪 Protein: ${match.protein} · Carbs: ${match.carbs}\n\nWant me to adjust the spice level or swap any ingredients? 😊`;
+        } else {
+          response = `Here's what I know about ${recipeState.recipeEmoji || "🍽️"} ${recipeState.recipeName}!\n\nI'd recommend checking your pantry for fresh ingredients and cooking it with your favorite spices.\n\nWant me to find a similar recipe from your plan? 😊`;
+        }
         const miraMsg: Message = { from: "mira", text: response, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
         setMessages(prev => [...prev, miraMsg]);
       }, 1500);
