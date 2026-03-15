@@ -4,30 +4,24 @@ import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
 import { useMealPlan, DAYS, DATES, type MealSlot } from "@/hooks/use-meal-plan";
 import { navigateBackOrTo } from "@/lib/navigation";
+import { recipes } from "@/data/recipes";
 
 const cuisineColors: Record<string, string> = {
   "IN": "bg-saffron", "IN-N": "bg-saffron", "IN-W": "bg-saffron",
   "IN-S": "bg-mm-green", "IN-C": "bg-mm-green",
-  "IT": "bg-[#276FBF]", "EU": "bg-[#276FBF]",
-  "CN": "bg-coral", "JP": "bg-coral",
-  "ME": "bg-mira-purple",
-};
-
-const cuisineTextColors: Record<string, string> = {
-  "IN": "text-cream", "IN-N": "text-cream", "IN-W": "text-cream",
-  "IN-S": "text-cream", "IN-C": "text-cream",
-  "IT": "text-cream", "EU": "text-cream",
-  "CN": "text-cream", "JP": "text-cream",
-  "ME": "text-cream",
+  "IT": "bg-[#276FBF]", "EU": "bg-[#276FBF]", "FR": "bg-[#276FBF]",
+  "GR": "bg-[#276FBF]", "ES": "bg-[#276FBF]",
+  "CN": "bg-coral", "JP": "bg-coral", "KR": "bg-coral",
+  "TH": "bg-coral", "VN": "bg-coral",
+  "ME": "bg-mira-purple", "LB": "bg-mira-purple", "TR": "bg-mira-purple",
+  "US": "bg-[#3B82F6]", "MX": "bg-[#EF4444]", "BR": "bg-[#22C55E]",
+  "PE": "bg-[#F59E0B]", "PK": "bg-mm-green", "LK": "bg-mm-green",
+  "NG": "bg-[#22C55E]", "ET": "bg-[#F59E0B]", "MA": "bg-coral",
 };
 
 const todayIdx = 0;
-
-const swapOptions = [
-  { name: "Paneer Butter Masala", time: "30m", cuisine: "North Indian", cuisineCode: "IN-N", emoji: "🍛" },
-  { name: "Mixed Veg Curry", time: "25m", cuisine: "Indian", cuisineCode: "IN", emoji: "🥘" },
-  { name: "Tofu Stir Fry", time: "20m", cuisine: "Asian", cuisineCode: "CN", emoji: "🍜" },
-];
+const slotLabels: Record<MealSlot, string> = { B: "Breakfast", L: "Lunch", D: "Dinner" };
+const slotEmoji: Record<MealSlot, string> = { B: "🌅", L: "☀️", D: "🌙" };
 
 const Home = () => {
   const navigate = useNavigate();
@@ -38,11 +32,30 @@ const Home = () => {
   const [showNewPlan, setShowNewPlan] = useState(false);
   const [fabLabel, setFabLabel] = useState(true);
 
+  // Load user profile
+  const userProfile = (() => {
+    try { return JSON.parse(localStorage.getItem("mealmate-user-profile") || "{}"); }
+    catch { return {}; }
+  })();
+  const userName = userProfile.country || "";
+
   useState(() => {
     setTimeout(() => setFabLabel(false), 3000);
   });
 
   const meal = selectedMeal ? mealData[selectedMeal.day]?.[selectedMeal.slot] : null;
+
+  // Generate swap options from recipes
+  const getSwapOptions = () => {
+    const diet = userProfile.diet || "Non-Vegetarian";
+    const filtered = recipes
+      .filter(r => diet === "Non-Vegetarian" || r.diet.includes(diet as any))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    return filtered.map(r => ({
+      name: r.name, time: r.time, cuisine: r.cuisine, cuisineCode: r.cuisineCode, emoji: r.emoji,
+    }));
+  };
 
   const handleMarkCooked = () => {
     if (!selectedMeal) return;
@@ -52,13 +65,22 @@ const Home = () => {
     toast.success(`🎉 ${meal?.name} marked as cooked! Pantry updated.`);
   };
 
-  const handleSwapSelect = (opt: typeof swapOptions[0]) => {
+  const handleSwapSelect = (opt: { name: string; time: string; cuisine: string; cuisineCode: string; emoji: string }) => {
     if (!showSwap) return;
     addRecipeToSlot(showSwap.day, showSwap.slot, opt);
     setShowSwap(null);
     setSelectedMeal(null);
     toast.success("Meal swapped ✅");
   };
+
+  // Collect unique cuisine codes from current meal plan for legend
+  const usedCuisineCodes = new Set<string>();
+  DAYS.forEach(day => {
+    (["B", "L", "D"] as const).forEach(slot => {
+      const m = mealData[day]?.[slot];
+      if (m) usedCuisineCodes.add(m.cuisineCode);
+    });
+  });
 
   return (
     <div className="mobile-container bg-cream min-h-screen pb-20">
@@ -70,7 +92,7 @@ const Home = () => {
               <span className="text-navy text-sm">←</span>
             </button>
             <div>
-              <p className="text-base font-bold text-navy">Good morning, Priya 👋</p>
+              <p className="text-base font-bold text-navy">Good morning 👋</p>
               <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
             </div>
           </div>
@@ -87,7 +109,7 @@ const Home = () => {
           <span className="w-8 h-8 rounded-full bg-card flex items-center justify-center text-sm">✨</span>
           <div className="flex-1">
             <p className="text-[11px] font-bold text-[#E9D5FF]">Mira™:</p>
-            <p className="text-[13px] text-cream mt-0.5">Your paneer expires in 2 days! Built this week around it — 3 paneer dishes planned 🎉</p>
+            <p className="text-[13px] text-cream mt-0.5">Your weekly meal plan is ready! Tap to chat with Mira™ for adjustments 🎉</p>
             <p className="text-[12px] text-[#E9D5FF] underline mt-1">Tap to chat with Mira™ →</p>
           </div>
         </div>
@@ -113,25 +135,38 @@ const Home = () => {
         </button>
       </div>
 
-      {/* Week grid */}
-      <div className="mt-3 overflow-x-auto px-4">
-        <div className="flex gap-1.5" style={{ width: `${DAYS.length * 78}px` }}>
+      {/* Week grid with meal slot labels */}
+      <div className="mt-3 px-4">
+        {/* Day headers row */}
+        <div className="flex gap-1.5 mb-1" style={{ paddingLeft: "40px" }}>
           {DAYS.map((day, di) => (
-            <div key={day} className="w-[72px] flex-shrink-0">
-              <div className="text-center mb-1.5">
-                <p className="text-[11px] font-bold text-mm-gray">{day}</p>
-                <p className="text-sm font-bold text-navy">{DATES[di]}</p>
-                {di === todayIdx && (
-                  <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
-                )}
+            <div key={day} className="w-[72px] flex-shrink-0 text-center">
+              <p className="text-[11px] font-bold text-mm-gray">{day}</p>
+              <p className="text-sm font-bold text-navy">{DATES[di]}</p>
+              {di === todayIdx && (
+                <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Meal rows: B, L, D */}
+        <div className="overflow-x-auto">
+          {(["B", "L", "D"] as const).map((slot) => (
+            <div key={slot} className="flex gap-1.5 mb-1.5">
+              {/* Slot label */}
+              <div className="w-[36px] flex-shrink-0 flex flex-col items-center justify-center">
+                <span className="text-sm">{slotEmoji[slot]}</span>
+                <span className="text-[8px] font-bold text-mm-gray leading-tight">{slotLabels[slot].slice(0, 1)}</span>
               </div>
-              {(["B", "L", "D"] as const).map((slot) => {
+              {/* Day cells */}
+              {DAYS.map((day) => {
                 const m = mealData[day]?.[slot];
-                if (!m) return null;
+                if (!m) return <div key={day} className="w-[72px] flex-shrink-0 min-h-[90px]" />;
                 const cc = cuisineColors[m.cuisineCode] || "bg-mm-gray";
                 return (
-                  <button key={slot} onClick={() => setSelectedMeal({ day, slot })}
-                    className={`relative w-full min-h-[90px] bg-card rounded-lg shadow-card mb-1.5 overflow-hidden text-left transition-all active:scale-95 ${
+                  <button key={day} onClick={() => setSelectedMeal({ day, slot })}
+                    className={`relative w-[72px] flex-shrink-0 min-h-[90px] bg-card rounded-lg shadow-card overflow-hidden text-left transition-all active:scale-95 ${
                       m.cooked ? "opacity-60" : ""
                     }`}
                   >
@@ -140,7 +175,7 @@ const Home = () => {
                       <span className="text-lg">{m.emoji}</span>
                       <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-2">{m.name}</p>
                       <span className="inline-block text-[7px] text-mm-gray bg-light-gray rounded-full px-1 mt-0.5">⏱{m.time}</span>
-                      <span className={`inline-block text-[8px] font-bold ${cc} ${cuisineTextColors[m.cuisineCode] || "text-cream"} rounded-full px-1 mt-0.5 ml-0.5`}>
+                      <span className={`inline-block text-[8px] font-bold ${cc} text-cream rounded-full px-1 mt-0.5 ml-0.5`}>
                         {m.cuisineCode}
                       </span>
                       {m.cooked && <span className="absolute top-2 right-1 text-sm">✅</span>}
@@ -157,14 +192,17 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Cuisine legend */}
+      {/* Cuisine legend - dynamic based on used codes */}
       <div className="mt-2 px-4 overflow-x-auto">
         <div className="flex gap-3 text-[10px] text-mm-gray whitespace-nowrap">
-          {[["IN", "Indian", "bg-saffron"], ["IN-N", "North Indian", "bg-saffron"], ["IN-S", "South Indian", "bg-mm-green"], ["IT", "Italian", "bg-[#276FBF]"], ["CN", "Chinese", "bg-coral"], ["JP", "Japanese", "bg-coral"], ["ME", "Middle East", "bg-mira-purple"]].map(([code, name, bg]) => (
-            <span key={code} className="flex items-center gap-1">
-              <span className={`w-2 h-2 rounded-sm ${bg}`} />{code}={name}
-            </span>
-          ))}
+          {Array.from(usedCuisineCodes).map(code => {
+            const bg = cuisineColors[code] || "bg-mm-gray";
+            return (
+              <span key={code} className="flex items-center gap-1">
+                <span className={`w-2 h-2 rounded-sm ${bg}`} />{code}
+              </span>
+            );
+          })}
         </div>
       </div>
 
@@ -172,16 +210,16 @@ const Home = () => {
       <div className="mx-4 mt-3 bg-card rounded-xl shadow-card p-3">
         <p className="text-sm font-bold text-foreground">📊 This week</p>
         <div className="flex gap-2 mt-2">
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍳 14 meals</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">🍳 21 meals</span>
           <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">✅ {cookedCount} cooked</span>
-          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 ₹1,240 est.</span>
+          <span className="text-[11px] bg-light-gray rounded-full px-2 py-1">💰 est. budget</span>
         </div>
         <div className="mt-2">
           <div className="flex justify-between text-[11px] text-mm-gray">
-            <span>₹1,240 / ₹1,500 budget</span>
+            <span>Weekly progress</span>
           </div>
           <div className="h-1.5 bg-light-gray rounded-full mt-1 overflow-hidden">
-            <div className="h-full bg-mm-green rounded-full" style={{ width: "83%" }} />
+            <div className="h-full bg-mm-green rounded-full" style={{ width: `${Math.round((cookedCount / 21) * 100)}%` }} />
           </div>
         </div>
       </div>
@@ -205,21 +243,11 @@ const Home = () => {
             <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(70vh - 20px)" }}>
               <h3 className="text-xl font-bold text-navy">{meal.name}</h3>
               <div className="flex gap-2 mt-2">
-                <span className={`text-[11px] font-bold ${cuisineColors[meal.cuisineCode]} text-cream px-2 py-0.5 rounded-full`}>{meal.cuisineCode}</span>
+                <span className={`text-[11px] font-bold ${cuisineColors[meal.cuisineCode] || "bg-mm-gray"} text-cream px-2 py-0.5 rounded-full`}>{meal.cuisineCode}</span>
                 <span className="text-[11px] bg-light-gray text-mm-gray px-2 py-0.5 rounded-full">⏱ {meal.time}</span>
               </div>
               <div className="mt-4">
-                <p className="text-[13px] font-bold text-foreground mb-2">What you'll need:</p>
-                <div className="space-y-1.5 text-[13px]">
-                  <p><span className="text-mm-green">✅</span> Tomatoes, 2 pcs — <span className="text-mm-gray">In pantry</span></p>
-                  <p><span className="text-mm-green">✅</span> Spinach, 100g — <span className="text-mm-gray">In pantry</span></p>
-                  <p><span className="text-coral">🔴</span> Miso paste, 1 tbsp — <span className="text-coral font-bold">Buy</span></p>
-                </div>
-              </div>
-              <div className="flex gap-2 mt-4">
-                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🔥 320 cal</span>
-                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🥩 12g protein</span>
-                <span className="text-[11px] bg-light-gray rounded-full px-2.5 py-1">🌾 45g carbs</span>
+                <p className="text-[13px] font-bold text-foreground mb-2">Meal type: {slotLabels[selectedMeal.slot]}</p>
               </div>
               <div className="mt-4 space-y-2">
                 <button onClick={() => { setShowSwap(selectedMeal); }} className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm">↔ Swap this meal</button>
@@ -238,15 +266,15 @@ const Home = () => {
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl animate-slide-up p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-center mb-3"><div className="w-8 h-1 bg-mm-gray/30 rounded-full" /></div>
-            <h3 className="text-lg font-bold text-navy mb-3">Swap {showSwap.day} {showSwap.slot === "B" ? "Breakfast" : showSwap.slot === "L" ? "Lunch" : "Dinner"}</h3>
+            <h3 className="text-lg font-bold text-navy mb-3">{slotLabels[showSwap.slot]} {showSwap.day} Swap</h3>
             <div className="space-y-2">
-              {swapOptions.map((opt) => (
+              {getSwapOptions().map((opt) => (
                 <button key={opt.name} onClick={() => handleSwapSelect(opt)}
                   className="w-full flex items-center gap-3 bg-light-bg rounded-xl p-3 active:scale-[0.98] transition-transform">
                   <span className="text-2xl">{opt.emoji}</span>
                   <div className="flex-1 text-left">
                     <p className="text-sm font-bold text-foreground">{opt.name}</p>
-                    <p className="text-[11px] text-mm-gray">⏱{opt.time} · {opt.cuisineCode}</p>
+                    <p className="text-[11px] text-mm-gray">⏱{opt.time} · {opt.cuisine}</p>
                   </div>
                   <span className="text-saffron text-sm font-bold">Select</span>
                 </button>
