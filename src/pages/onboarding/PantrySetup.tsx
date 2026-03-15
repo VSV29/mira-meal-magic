@@ -179,9 +179,7 @@ const PantrySetup = () => {
         <div>
           <h2 className="text-xl font-bold text-navy">What's already in your kitchen?</h2>
           <p className="text-[13px] text-mm-gray mt-1">
-            {country
-              ? `Showing common ${country} / ${resolvedRegion} ingredients${diet ? ` · ${diet} friendly` : ""}`
-              : "Mira™ uses this to minimise what you need to buy"}
+            Tick what you already have — Mira™ uses this to cut your shopping list ✂️
           </p>
         </div>
 
@@ -214,7 +212,7 @@ const PantrySetup = () => {
           return (
             <div key={cat} className="bg-card rounded-xl p-3 border-t-2 border-saffron shadow-card">
               <p className="text-[12px] text-mm-gray mb-2">
-                {categories.find(c => c.name === cat)?.emoji} {categories.find(c => c.name === cat)?.label || cat} common in {country || resolvedRegion}:
+                {categories.find(c => c.name === cat)?.emoji} {categories.find(c => c.name === cat)?.label || cat}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {allItems.map(item => (
