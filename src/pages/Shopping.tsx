@@ -9,7 +9,7 @@ type ShopItem = {
   name: string;
   qty: string;
   status: "buy" | "low" | "pantry";
-  price?: number;
+  price: number;
   online?: boolean;
   category: string;
   checked: boolean;
@@ -17,7 +17,7 @@ type ShopItem = {
 
 const initialItems: ShopItem[] = [
   { name: "Baby spinach", qty: "200g", status: "buy", price: 35, category: "Produce", checked: false },
-  { name: "Tomatoes", qty: "4 pcs", status: "pantry", category: "Produce", checked: false },
+  { name: "Tomatoes", qty: "4 pcs", status: "pantry", price: 0, category: "Produce", checked: false },
   { name: "Coriander bunch", qty: "1", status: "buy", price: 15, category: "Produce", checked: false },
   { name: "Curd", qty: "400g", status: "low", price: 45, category: "Dairy", checked: false },
   { name: "Paneer", qty: "200g", status: "buy", price: 80, category: "Dairy", checked: false },
@@ -47,9 +47,9 @@ const Shopping = () => {
   };
 
   const categories = [...new Set(items.map(i => i.category))];
-  const needToBuy = items.filter(i => i.status !== "pantry" && !i.checked);
-  const totalPrice = needToBuy.reduce((sum, i) => sum + (typeof i.price === "number" ? i.price : 0), 0);
-  const onlineTotal = needToBuy.filter(i => i.online).reduce((sum, i) => sum + (typeof i.price === "number" ? i.price : 0), 0);
+  const needToBuy = items.filter(i => (i.status === "buy" || i.status === "low") && !i.checked);
+  const totalPrice = needToBuy.reduce((sum, i) => sum + i.price, 0);
+  const onlineTotal = needToBuy.filter(i => i.online === true).reduce((sum, i) => sum + i.price, 0);
 
   return (
     <div className="mobile-container bg-cream min-h-screen pb-24">
@@ -103,7 +103,7 @@ const Shopping = () => {
                         <p className={`text-sm font-bold text-foreground ${item.checked ? "line-through" : ""}`}>{item.name}</p>
                         <p className="text-[12px] text-mm-gray">{item.qty}</p>
                       </div>
-                      {item.price ? <span className="text-[13px] font-bold text-saffron">{formatBudget(item.price, userCountry)}</span> : null}
+                      {item.status !== "pantry" && item.price > 0 ? <span className="text-[13px] font-bold text-saffron">{formatBudget(item.price, userCountry)}</span> : null}
                       {item.status === "pantry" && <span className="text-[11px] text-mm-green">✓ In pantry</span>}
                       {item.online && (
                         <span className="text-[10px] bg-mira-purple-light text-mira-purple px-2 py-0.5 rounded-full font-semibold">📦 Online</span>
