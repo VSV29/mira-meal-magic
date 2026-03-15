@@ -153,7 +153,7 @@ const BrowseCuisines = () => {
 
       {/* Recipe detail sheet */}
       {selectedRecipe && !showSlotPicker && (
-        <div className="fixed inset-0 z-40 flex items-end" onClick={() => setSelectedRecipe(null)}>
+        <div className="fixed inset-0 z-[60] flex items-end" onClick={() => setSelectedRecipe(null)}>
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl" style={{ maxHeight: "75vh" }}
             onClick={(e) => e.stopPropagation()}>
