@@ -105,7 +105,7 @@ const PantrySetup = () => {
   const { region, country, diet, religious, allergies } = state;
 
   const resolvedRegion = region || "South Asia";
-  const currency = currencyByRegion[resolvedRegion] || "₹";
+  const currency = getCurrency(country || "USA");
 
   // Build exclusion set from dietary choices
   const exclusionSet = useMemo(() => {
