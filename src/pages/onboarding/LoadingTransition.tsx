@@ -34,6 +34,7 @@ const LoadingTransition = () => {
   const goHome = () => navigate("/home");
 
   const pantryCount = Object.values(state.pantryItems || {}).flat().length;
+  const budgetAmount = state.budget || 200;
 
   return (
     <div className="mobile-container min-h-screen flex flex-col items-center justify-center relative"
