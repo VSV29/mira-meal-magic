@@ -24,7 +24,7 @@ const BottomTabBar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-[72px] bg-card border-t border-light-gray flex items-center justify-around px-2 z-50">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-card border-t border-light-gray flex items-center justify-around px-2 z-50" style={{ minHeight: '72px', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {tabs.map((tab) => {
         const active = location.pathname === tab.path;
         return (
