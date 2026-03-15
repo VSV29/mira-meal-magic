@@ -34,10 +34,30 @@ const autoResponses: Record<string, string> = {
 
 const MiraChat = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const recipeState = (location.state as { recipeName?: string; recipeEmoji?: string }) || {};
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const recipeHandled = useRef(false);
+
+  // Auto-send recipe query when navigated from meal detail
+  useEffect(() => {
+    if (recipeState.recipeName && !recipeHandled.current) {
+      recipeHandled.current = true;
+      const query = `Tell me the full recipe for ${recipeState.recipeEmoji || ""} ${recipeState.recipeName}`;
+      const userMsg: Message = { from: "user", text: query, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+      setMessages(prev => [...prev, userMsg]);
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        const response = `Here's the full recipe for ${recipeState.recipeEmoji || "🍽️"} **${recipeState.recipeName}**!\n\n📝 **Ingredients:**\n• 200g paneer, cubed\n• 1 cup spinach/veggies\n• 2 tbsp oil or ghee\n• 1 onion, diced\n• 2 tomatoes, pureed\n• Spices to taste\n\n👩‍🍳 **Steps:**\n1. Heat oil, sauté onions until golden\n2. Add tomato puree, cook 3-4 min\n3. Add spices & main ingredients\n4. Cook on medium heat 8-10 min\n5. Garnish & serve hot!\n\n⏱ Ready in ~25 min\n\nWant me to adjust the spice level or swap any ingredients? 😊`;
+        const miraMsg: Message = { from: "mira", text: response, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+        setMessages(prev => [...prev, miraMsg]);
+      }, 1500);
+    }
+  }, [recipeState.recipeName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
