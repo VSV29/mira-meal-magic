@@ -43,6 +43,19 @@ const MiraChat = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const bar = document.getElementById('mira-input-bar');
+      if (!bar) return;
+      const offset = window.innerHeight - vv.height;
+      bar.style.transform = `translateY(-${offset}px)`;
+    };
+    vv.addEventListener('resize', handler);
+    return () => vv.removeEventListener('resize', handler);
+  }, []);
+
   const sendMessage = (text: string) => {
     const userMsg: Message = { from: "user", text, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
     setMessages(prev => [...prev, userMsg]);
@@ -59,7 +72,7 @@ const MiraChat = () => {
   };
 
   return (
-    <div className="mobile-container bg-card min-h-screen flex flex-col pb-[72px]">
+    <div className="mobile-container bg-card flex flex-col" style={{ height: '100dvh' }}>
       {/* Header */}
       <div className="bg-mira-purple px-4 py-3 flex items-center gap-3">
         <button onClick={() => navigateBackOrTo(navigate)} className="text-cream text-lg">←</button>
@@ -117,7 +130,7 @@ const MiraChat = () => {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2">
+      <div id="mira-input-bar" className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2" style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
