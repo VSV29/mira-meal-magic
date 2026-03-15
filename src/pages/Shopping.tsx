@@ -47,9 +47,9 @@ const Shopping = () => {
   };
 
   const categories = [...new Set(items.map(i => i.category))];
-  const needToBuy = items.filter(i => i.status !== "pantry" && !i.checked);
-  const totalPrice = needToBuy.reduce((sum, i) => sum + (typeof i.price === "number" ? i.price : 0), 0);
-  const onlineTotal = needToBuy.filter(i => i.online).reduce((sum, i) => sum + (typeof i.price === "number" ? i.price : 0), 0);
+  const needToBuy = items.filter(i => (i.status === "buy" || i.status === "low") && !i.checked);
+  const totalPrice = needToBuy.reduce((sum, i) => sum + i.price, 0);
+  const onlineTotal = needToBuy.filter(i => i.online === true).reduce((sum, i) => sum + i.price, 0);
 
   return (
     <div className="mobile-container bg-cream min-h-screen pb-24">
