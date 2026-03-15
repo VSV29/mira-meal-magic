@@ -11,6 +11,11 @@ const SplashScreen = () => {
         background: "linear-gradient(160deg, hsl(var(--navy)) 0%, hsl(var(--mira-purple-dark)) 60%, hsl(var(--saffron)) 100%)",
       }}
     >
+      {/* Back button */}
+      <button onClick={() => navigate(-1)} className="absolute top-12 left-5 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-90 transition-transform">
+        <span className="text-cream text-sm">←</span>
+      </button>
+
       {/* Decorative glow */}
       <div className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl" style={{ background: "hsl(var(--saffron))", top: "20%", left: "10%" }} />
       <div className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl" style={{ background: "hsl(var(--mira-purple))", bottom: "25%", right: "5%" }} />
