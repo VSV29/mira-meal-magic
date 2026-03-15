@@ -5,6 +5,7 @@ import MealSlotPicker from "@/components/MealSlotPicker";
 import { recipes, getCuisinesByCountry, getCuisinesByRegion, getRecipes, type Recipe } from "@/data/recipes";
 import { useMealPlan, type MealSlot } from "@/hooks/use-meal-plan";
 import { toast } from "sonner";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const cuisineEmojis: Record<string, string> = {
   "North Indian": "🍛", "South Indian": "🥘", "Bengali": "🐟", "Gujarati": "🫓",

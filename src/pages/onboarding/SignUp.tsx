@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import ProgressDots from "@/components/ProgressDots";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const SignUp = () => {
   const navigate = useNavigate();

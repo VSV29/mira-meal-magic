@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
 import { toast } from "sonner";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 type Message = { from: "mira" | "user"; text: string; time: string };
 

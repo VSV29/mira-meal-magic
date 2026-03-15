@@ -5,6 +5,7 @@ import MealSlotPicker from "@/components/MealSlotPicker";
 import { getRecipesByIngredients, type Recipe } from "@/data/recipes";
 import { useMealPlan, type MealSlot } from "@/hooks/use-meal-plan";
 import { toast } from "sonner";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const commonIngredients: Record<string, string[]> = {
   "🌾 Grains": ["Rice", "Pasta", "Noodles", "Bread", "Flour", "Oats", "Quinoa", "Tortillas", "Couscous"],

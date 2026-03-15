@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
+import { navigateBackOrTo } from "@/lib/navigation";
 
 const pantryItems = [
   { emoji: "🌾", name: "Toor Dal", qty: "500g", status: "good" },
