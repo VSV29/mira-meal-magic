@@ -136,58 +136,62 @@ const Home = () => {
 
       {/* Week grid with meal slot labels */}
       <div className="mt-3 px-4">
-        {/* Day headers row */}
-        <div className="flex gap-1.5 mb-1" style={{ paddingLeft: "40px" }}>
-          {DAYS.map((day, di) => (
-            <div key={day} className="w-[72px] flex-shrink-0 text-center">
-              <p className="text-[11px] font-bold text-mm-gray">{day}</p>
-              <p className="text-sm font-bold text-navy">{DATES[di]}</p>
-              {di === todayIdx && (
-                <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
-              )}
+        <div className="overflow-x-auto" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+          <div className="inline-block min-w-full">
+            {/* Day headers row */}
+            <div className="flex gap-1.5 mb-1" style={{ paddingLeft: "40px" }}>
+              {DAYS.map((day, di) => (
+                <div key={day} className="w-[72px] flex-shrink-0 text-center">
+                  <p className="text-[11px] font-bold text-mm-gray">{day}</p>
+                  <p className="text-sm font-bold text-navy">{DATES[di]}</p>
+                  {di === todayIdx && (
+                    <span className="inline-block text-[8px] font-bold bg-saffron text-cream px-1.5 py-0.5 rounded-full">TODAY</span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Meal rows: B, L, D */}
-        <div className="overflow-x-auto">
-          {(["B", "L", "D"] as const).map((slot) => (
-            <div key={slot} className="flex gap-1.5 mb-1.5">
-              {/* Slot label */}
-              <div className="w-[36px] flex-shrink-0 flex flex-col items-center justify-center">
-                <span className="text-sm">{slotEmoji[slot]}</span>
-                <span className="text-[8px] font-bold text-mm-gray leading-tight">{slotLabels[slot].slice(0, 1)}</span>
-              </div>
-              {/* Day cells */}
-              {DAYS.map((day) => {
-                const m = mealData[day]?.[slot];
-                if (!m) return <div key={day} className="w-[72px] flex-shrink-0 min-h-[90px]" />;
-                const cc = cuisineColors[m.cuisineCode] || "bg-mm-gray";
-                return (
-                  <button key={day} onClick={() => setSelectedMeal({ day, slot })}
-                    className={`relative w-[72px] flex-shrink-0 min-h-[90px] bg-card rounded-lg shadow-card overflow-hidden text-left transition-all active:scale-95 ${
-                      m.cooked ? "opacity-60" : ""
-                    }`}
-                  >
-                    <div className={`h-1 w-full ${cc}`} />
-                    <div className="p-1.5">
-                      <span className="text-lg">{m.emoji}</span>
-                      <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-2">{m.name}</p>
-                      <span className="inline-block text-[7px] text-mm-gray bg-light-gray rounded-full px-1 mt-0.5">⏱{m.time}</span>
-                      <span className={`inline-block text-[8px] font-bold ${cc} text-cream rounded-full px-1 mt-0.5 ml-0.5`}>
-                        {m.cuisineCode}
-                      </span>
-                      {m.cooked && <span className="absolute top-2 right-1 text-sm">✅</span>}
-                    </div>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShowSwap({ day, slot }); }}
-                      className="absolute top-1.5 right-1 text-[10px] text-mm-gray"
-                    >↔</button>
-                  </button>
-                );
-              })}
+            {/* Meal rows: B, L, D */}
+            <div>
+              {(["B", "L", "D"] as const).map((slot) => (
+                <div key={slot} className="flex gap-1.5 mb-1.5">
+                  {/* Slot label */}
+                  <div className="w-[36px] flex-shrink-0 flex flex-col items-center justify-center">
+                    <span className="text-sm">{slotEmoji[slot]}</span>
+                    <span className="text-[8px] font-bold text-mm-gray leading-tight">{slotLabels[slot].slice(0, 1)}</span>
+                  </div>
+                  {/* Day cells */}
+                  {DAYS.map((day) => {
+                    const m = mealData[day]?.[slot];
+                    if (!m) return <div key={day} className="w-[72px] flex-shrink-0 min-h-[90px]" />;
+                    const cc = cuisineColors[m.cuisineCode] || "bg-mm-gray";
+                    return (
+                      <button key={day} onClick={() => setSelectedMeal({ day, slot })}
+                        className={`relative w-[72px] flex-shrink-0 min-h-[90px] bg-card rounded-lg shadow-card overflow-hidden text-left transition-all active:scale-95 ${
+                          m.cooked ? "opacity-60" : ""
+                        }`}
+                      >
+                        <div className={`h-1 w-full ${cc}`} />
+                        <div className="p-1.5">
+                          <span className="text-lg">{m.emoji}</span>
+                          <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-2">{m.name}</p>
+                          <span className="inline-block text-[7px] text-mm-gray bg-light-gray rounded-full px-1 mt-0.5">⏱{m.time}</span>
+                          <span className={`inline-block text-[8px] font-bold ${cc} text-cream rounded-full px-1 mt-0.5 ml-0.5`}>
+                            {m.cuisineCode}
+                          </span>
+                          {m.cooked && <span className="absolute top-2 right-1 text-sm">✅</span>}
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setShowSwap({ day, slot }); }}
+                          className="absolute top-1.5 right-1 text-[10px] text-mm-gray"
+                        >↔</button>
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
