@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { navigateBackOrTo } from "@/lib/navigation";
 import { generateMealPlan } from "@/hooks/use-meal-plan";
+import { formatBudget } from "@/lib/currency";
 
 const LoadingTransition = () => {
   const navigate = useNavigate();
