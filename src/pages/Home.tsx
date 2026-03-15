@@ -265,7 +265,7 @@ const Home = () => {
 
       {/* Swap sheet */}
       {showSwap && (
-        <div className="fixed inset-0 z-50 flex items-end" onClick={() => setShowSwap(null)}>
+        <div className="fixed inset-0 z-[70] flex items-end" onClick={() => setShowSwap(null)}>
           <div className="absolute inset-0 bg-foreground/30" />
           <div className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl animate-slide-up p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-center mb-3"><div className="w-8 h-1 bg-mm-gray/30 rounded-full" /></div>
