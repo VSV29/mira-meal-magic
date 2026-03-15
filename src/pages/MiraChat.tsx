@@ -150,13 +150,13 @@ const MiraChat = () => {
       </div>
 
       {/* Input */}
-      <div id="mira-input-bar" className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2" style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}>
+      <div id="mira-input-bar" className="px-4 py-2 bg-card border-t border-light-gray flex items-center gap-2 mb-[72px]" style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && input.trim() && sendMessage(input.trim())}
           placeholder="Ask Mira™ anything about your meals..."
-          className="flex-1 h-10 rounded-full bg-light-gray px-4 text-sm outline-none"
+          className="flex-1 h-10 rounded-full bg-light-gray px-4 text-sm outline-none focus:ring-2 focus:ring-mira-purple"
         />
         <button onClick={() => input.trim() && sendMessage(input.trim())}
           className="w-9 h-9 rounded-full bg-mira-purple flex items-center justify-center text-cream text-sm font-bold">→</button>
