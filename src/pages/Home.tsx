@@ -37,7 +37,7 @@ const Home = () => {
     try { return JSON.parse(localStorage.getItem("mealmate-user-profile") || "{}"); }
     catch { return {}; }
   })();
-  const userName = userProfile.country || "";
+  const userName = userProfile.name || "there";
 
   // Auto-hide fab label
   const [_init] = useState(() => {
@@ -91,7 +91,7 @@ const Home = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div>
-              <p className="text-base font-bold text-navy">Good morning 👋</p>
+              <p className="text-base font-bold text-navy">Good morning, {userName} 👋</p>
               <p className="text-[12px] text-mm-gray">Week of Mar 14 – Mar 20</p>
             </div>
           </div>
