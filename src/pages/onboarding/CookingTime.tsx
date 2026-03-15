@@ -65,17 +65,19 @@ const CookingTime = () => {
 
         {/* Skill */}
         <div>
-          <p className="text-[11px] text-mm-gray uppercase font-semibold mb-2">Skill Level</p>
+          <div className="flex items-baseline justify-between mb-2">
+            <p className="text-[11px] text-mm-gray uppercase font-semibold">Skill Level</p>
+            <p className="text-[12px] text-mm-gray italic">{skills.find(s => s.label === skill)?.sub}</p>
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {skills.map(s => (
               <button key={s.label} onClick={() => setSkill(s.label)}
-                className={`h-[72px] rounded-xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 ${
+                className={`h-14 rounded-xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 ${
                   skill === s.label ? "bg-navy text-cream" : "bg-card shadow-card text-foreground"
                 }`}
               >
-                <span className={`text-[28px] ${skill === s.label ? "bg-card/20 rounded-full w-10 h-10 flex items-center justify-center" : ""}`}>{s.emoji}</span>
+                <span className="text-[22px]">{s.emoji}</span>
                 <span className="text-[13px] font-bold">{s.label}</span>
-                <span className={`text-[11px] ${skill === s.label ? "text-cream/70" : "text-mm-gray"}`}>{s.sub}</span>
               </button>
             ))}
           </div>
