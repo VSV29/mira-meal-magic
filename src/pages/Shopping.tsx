@@ -17,7 +17,7 @@ type ShopItem = {
 
 const initialItems: ShopItem[] = [
   { name: "Baby spinach", qty: "200g", status: "buy", price: 35, category: "Produce", checked: false },
-  { name: "Tomatoes", qty: "4 pcs", status: "pantry", category: "Produce", checked: false },
+  { name: "Tomatoes", qty: "4 pcs", status: "pantry", price: 0, category: "Produce", checked: false },
   { name: "Coriander bunch", qty: "1", status: "buy", price: 15, category: "Produce", checked: false },
   { name: "Curd", qty: "400g", status: "low", price: 45, category: "Dairy", checked: false },
   { name: "Paneer", qty: "200g", status: "buy", price: 80, category: "Dairy", checked: false },
