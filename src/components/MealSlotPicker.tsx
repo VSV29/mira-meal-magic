@@ -17,7 +17,7 @@ const MealSlotPicker = ({ recipeName, onSelect, onClose }: Props) => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] flex items-end" onClick={onClose}>
       <div className="absolute inset-0 bg-foreground/30" />
       <div
         className="relative w-full max-w-[390px] mx-auto bg-card rounded-t-2xl p-4"
