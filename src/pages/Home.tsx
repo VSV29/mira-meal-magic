@@ -258,7 +258,7 @@ const Home = () => {
                 <button onClick={() => { setShowSwap(selectedMeal); }} className="w-full h-11 rounded-lg bg-saffron text-cream font-bold text-sm">↔ Swap this meal</button>
                 <button onClick={handleMarkCooked} className="w-full h-11 rounded-lg bg-mm-green text-cream font-bold text-sm">✅ Mark as Cooked</button>
                 <button className="w-full h-11 rounded-lg border border-coral text-coral font-bold text-sm">🚫 Never suggest this again</button>
-                <button onClick={() => { setSelectedMeal(null); navigate("/mira"); }} className="w-full text-mira-purple text-sm font-medium">💬 Ask Mira™ about this recipe</button>
+                <button onClick={() => { setSelectedMeal(null); navigate("/mira", { state: { recipeName: meal?.name, recipeEmoji: meal?.emoji } }); }} className="w-full text-mira-purple text-sm font-medium">💬 Ask Mira™ about this recipe</button>
               </div>
             </div>
           </div>
