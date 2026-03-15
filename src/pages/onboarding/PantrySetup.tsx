@@ -229,11 +229,11 @@ const PantrySetup = () => {
       </div>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] p-4 bg-cream space-y-2">
-        <button onClick={() => navigate("/onboarding/loading")}
+        <button onClick={() => navigate("/onboarding/loading", { state: { ...state, pantryItems: selItems, budget } })}
           className="w-full h-[52px] rounded-xl bg-saffron text-cream font-bold text-base active:scale-[0.98] transition-transform">
           ✨ Generate My Plan →
         </button>
-        <button onClick={() => navigate("/onboarding/loading")}
+        <button onClick={() => navigate("/onboarding/loading", { state: { ...state, pantryItems: selItems, budget } })}
           className="w-full text-center text-mm-gray text-sm">
           Skip for now — I'll add later
         </button>
