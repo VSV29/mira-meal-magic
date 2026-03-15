@@ -259,8 +259,8 @@ const PantrySetup = () => {
         {/* Budget */}
         <div className="bg-card rounded-xl p-4 shadow-card flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold text-foreground">{currency} Budget per meal</p>
-            <p className="text-[12px] text-mm-gray">Used to prioritise affordable suggestions</p>
+            <p className="text-sm font-bold text-foreground">{currency.symbol} Budget per meal</p>
+            <p className="text-[12px] text-mm-gray">Budget per meal in {currency.code}</p>
           </div>
           <input
             type="number"
