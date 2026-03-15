@@ -20,6 +20,7 @@ import BrowseCuisines from "@/pages/BrowseCuisines";
 import MealPlanner from "@/pages/MealPlanner";
 import NotFound from "@/pages/NotFound";
 
+// Routes refresh
 const AnimatedRoutes = () => {
   const location = useLocation();
 
