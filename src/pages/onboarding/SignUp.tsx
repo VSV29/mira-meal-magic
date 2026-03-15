@@ -7,6 +7,10 @@ const SignUp = () => {
   return (
     <div className="mobile-container bg-cream flex flex-col min-h-screen">
       <div className="flex-1 flex flex-col items-center px-6">
+        {/* Back button */}
+        <button onClick={() => navigate(-1)} className="self-start mt-4 w-9 h-9 rounded-full bg-light-gray flex items-center justify-center active:scale-90 transition-transform">
+          <span className="text-navy text-sm">←</span>
+        </button>
         {/* Logo */}
         <div className="pt-20 text-center">
           <h1 className="text-[32px] font-extrabold text-navy">MealMate</h1>
