@@ -212,7 +212,7 @@ const PantrySetup = () => {
           return (
             <div key={cat} className="bg-card rounded-xl p-3 border-t-2 border-saffron shadow-card">
               <p className="text-[12px] text-mm-gray mb-2">
-                {categories.find(c => c.name === cat)?.emoji} {categories.find(c => c.name === cat)?.label || cat} common in {country || resolvedRegion}:
+                {categories.find(c => c.name === cat)?.emoji} {categories.find(c => c.name === cat)?.label || cat}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {allItems.map(item => (
