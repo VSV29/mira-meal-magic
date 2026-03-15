@@ -172,13 +172,13 @@ const PantrySetup = () => {
             if (c.name === "Dairy" && diet === "Vegan") return null;
             return (
               <button key={c.name} onClick={() => toggleCat(c.name)}
-                className={`h-[72px] rounded-xl flex flex-col items-center justify-center gap-1 shadow-card transition-all active:scale-95 ${
+                className={`h-[78px] rounded-xl flex flex-col items-center justify-center gap-0.5 shadow-card transition-all active:scale-95 overflow-hidden px-1 ${
                   selCats.includes(c.name) ? "bg-saffron-light border-2 border-saffron" : "bg-card border-2 border-transparent"
                 }`}
               >
-                <span className="text-[28px]">{c.emoji}</span>
-                <span className="text-[12px] font-bold text-foreground">{c.name}</span>
-                <span className="text-[9px] text-mm-gray">{items.length} items</span>
+                <span className="text-[24px] leading-none">{c.emoji}</span>
+                <span className="text-[11px] font-bold text-foreground leading-tight">{c.name}</span>
+                <span className="text-[9px] text-mm-gray leading-tight">{items.length} items</span>
               </button>
             );
           })}
