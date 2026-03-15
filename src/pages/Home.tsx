@@ -155,7 +155,7 @@ const Home = () => {
                         <div className={`h-1 w-full ${cc}`} />
                         <div className="p-1.5">
                           <span className="text-lg">{m.emoji}</span>
-                          <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-2">{m.name}</p>
+                          <p className="text-[9px] font-bold text-foreground leading-tight mt-0.5 line-clamp-3">{m.name}</p>
                           <span className="inline-block text-[7px] text-mm-gray bg-light-gray rounded-full px-1 mt-0.5">⏱{m.time}</span>
                           <span className={`inline-block text-[8px] font-bold ${cc} text-cream rounded-full px-1 mt-0.5 ml-0.5`}>
                             {m.cuisineCode}
